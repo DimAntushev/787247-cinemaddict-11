@@ -315,7 +315,7 @@ const popupDetailClose = popupDetail.querySelector(`.film-details__close-btn`);
 
 const onButtonCloseClick = () => {
   popupDetail.classList.add(`visually-hidden`);
-  popupDetailClose.removeEventListener(onButtonCloseClick);
+  popupDetailClose.removeEventListener(`click`, onButtonCloseClick);
 };
 
 popupDetailClose.addEventListener(`click`, onButtonCloseClick);
