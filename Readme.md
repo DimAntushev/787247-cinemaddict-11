@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий Антушев](https://up.htmlacademy.ru/ecmascript/11/user/787247).
-* Наставник: `Неизвестно`.
+* Наставник: [Руфат Хасларов] (https://htmlacademy.ru/profile/id372587).
 
 ---
 
