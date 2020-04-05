@@ -4,10 +4,6 @@ const NUMBER_FILMS_IN_MAIN_LIST = 5;
 const NUMBER_FILMS_IN_TOP = 2;
 const NUMBER_FILMS_IN_MOST_COMMENT = 2;
 
-const mainBlock = document.querySelector(`.main`);
-const mainHeader = document.querySelector(`.header`);
-const mainFooter = document.querySelector(`.footer`);
-
 const siteUserProfile = () => {
   return (
     `<section class="header__profile profile">
@@ -270,13 +266,13 @@ const render = (container, markup, position = `beforeend`) => {
   container.insertAdjacentHTML(position, markup);
 };
 
-const renderHeader = () => {
+const renderHeader = (mainHeader) => {
   render(mainHeader, siteUserProfile());
 };
-const renderMainBlocks = () => {
-  render(mainBlock, siteMenu());
-  render(mainBlock, siteSort());
-  render(mainBlock, siteFilmsMainBlocks());
+const renderMainBlocks = (mainBlockContent) => {
+  render(mainBlockContent, siteMenu());
+  render(mainBlockContent, siteSort());
+  render(mainBlockContent, siteFilmsMainBlocks());
 };
 const renderFilmCards = (filmList, numberCards) => {
   for (let i = 0; i < numberCards; i++) {
@@ -294,14 +290,18 @@ const renderFilmLists = (filmList, filmListTop, filmListMostComment) => {
 const renderFooter = (footerStatistics) => {
   render(footerStatistics, siteTotalNumberFilms());
 };
-const renderDetailPopup = () => {
+const renderDetailPopup = (mainFooter) => {
   render(mainFooter, siteFilmDetailPopup(), `afterend`);
 };
 
 const init = () => {
-  renderHeader();
+  const mainBlock = document.querySelector(`.main`);
+  const mainHeader = document.querySelector(`.header`);
+  const mainFooter = document.querySelector(`.footer`);
 
-  renderMainBlocks();
+  renderHeader(mainHeader);
+
+  renderMainBlocks(mainBlock);
   const filmListMain = mainBlock.querySelector(`.films-list`);
   renderShowMoreButton(filmListMain);
   const filmList = filmListMain.querySelector(`.films-list__container`);
@@ -313,7 +313,7 @@ const init = () => {
 
   renderFooter(footerStatistics);
 
-  renderDetailPopup();
+  renderDetailPopup(mainFooter);
 };
 init();
 
