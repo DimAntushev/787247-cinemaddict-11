@@ -283,30 +283,39 @@ const renderFilmCards = (filmList, numberCards) => {
     render(filmList, siteFilmCard());
   }
 };
-const renderFilmLists = () => {
+const renderShowMoreButton = (filmListMain) => {
   render(filmListMain, siteShowMoreButton());
+};
+const renderFilmLists = (filmList, filmListTop, filmListMostComment) => {
   renderFilmCards(filmList, NUMBER_FILMS_IN_MAIN_LIST);
   renderFilmCards(filmListTop, NUMBER_FILMS_IN_TOP);
   renderFilmCards(filmListMostComment, NUMBER_FILMS_IN_MOST_COMMENT);
 };
-const renderFooter = () => {
+const renderFooter = (footerStatistics) => {
   render(footerStatistics, siteTotalNumberFilms());
 };
 const renderDetailPopup = () => {
   render(mainFooter, siteFilmDetailPopup(), `afterend`);
 };
 
-renderHeader();
-renderMainBlocks();
-const filmListMain = mainBlock.querySelector(`.films-list`);
-const filmList = filmListMain.querySelector(`.films-list__container`);
-const filmsListAdditional = mainBlock.querySelectorAll(`.films-list--extra`);
-const filmListTop = filmsListAdditional[0].querySelector(`.films-list__container`);
-const filmListMostComment = filmsListAdditional[1].querySelector(`.films-list__container`);
-renderFilmLists();
-const footerStatistics = document.querySelector(`.footer__statistics`);
-renderFooter();
-renderDetailPopup();
+const init = () => {
+  renderHeader();
+
+  renderMainBlocks();
+  const filmListMain = mainBlock.querySelector(`.films-list`);
+  renderShowMoreButton(filmListMain);
+  const filmList = filmListMain.querySelector(`.films-list__container`);
+  const filmsListAdditional = mainBlock.querySelectorAll(`.films-list--extra`);
+  const filmListTop = filmsListAdditional[0].querySelector(`.films-list__container`);
+  const filmListMostComment = filmsListAdditional[1].querySelector(`.films-list__container`);
+  renderFilmLists(filmList, filmListTop, filmListMostComment);
+  const footerStatistics = document.querySelector(`.footer__statistics`);
+
+  renderFooter(footerStatistics);
+
+  renderDetailPopup();
+};
+init();
 
 // Дополнительные функционал для скрытия попапа
 
