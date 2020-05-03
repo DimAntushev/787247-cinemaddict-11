@@ -1,7 +1,7 @@
-const siteShowMoreButton = () => {
+const createMoreButtonTemplate = () => {
   return (
     `<button class="films-list__show-more">Show more</button>`
   );
 };
 
-export {siteShowMoreButton};
+export {createMoreButtonTemplate};
