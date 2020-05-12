@@ -1,4 +1,5 @@
 import {MONTHS} from './../const.js';
+import {createElement} from './../utils.js';
 
 const createGenreMarkup = (genres) => {
   return genres.map((genre) => {
@@ -162,4 +163,26 @@ const createPopupDetailFilmTemplate = (film) => {
   );
 };
 
-export {createPopupDetailFilmTemplate};
+export default class PopupDetailFilm {
+  constructor(film) {
+    this._film = film;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPopupDetailFilmTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

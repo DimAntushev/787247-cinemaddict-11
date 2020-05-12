@@ -1,3 +1,5 @@
+import {createElement} from './../utils.js';
+
 const createSortTemplate = (sort) => {
   return (
     `<li><a href="#" class="sort__button ${sort.active ? `sort__button--active` : ``}">
@@ -20,4 +22,26 @@ const createSortsTemplate = (sorts) => {
   );
 };
 
-export {createSortsTemplate};
+export default class Sorts {
+  constructor(sorts) {
+    this._sorts = sorts;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSortsTemplate(this._sorts);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

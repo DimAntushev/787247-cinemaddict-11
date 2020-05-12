@@ -1,3 +1,5 @@
+import {createElement} from './../utils.js';
+
 const filterTemplate = (filter) => {
   return (
     `<a href="#watchlist" class="main-navigation__item">
@@ -27,4 +29,26 @@ const createFiltersTemplate = (filters) => {
   );
 };
 
-export {createFiltersTemplate};
+export default class Filters {
+  constructor(filters) {
+    this._filters = filters;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFiltersTemplate(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
