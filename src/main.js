@@ -42,6 +42,7 @@ const renderFilterAndSortSections = (mainBlockContent, allFilters, allSorts) => 
   renderFilters(allFilters, mainBlockContent);
   renderSorts(allSorts, mainBlockContent);
 };
+
 const renderMainBlockForFilms = (mainBlockContent) => {
   const mainBlockFilmsComponent = new MainBlockFilmsComponent();
   render(mainBlockContent, mainBlockFilmsComponent.getElement());
@@ -85,7 +86,7 @@ const renderFooter = (totalFilms, footerStatistics) => {
 };
 
 const renderFilmsSection = (mainBlock) => {
-  if (films.length === 0) {
+  if (!films.length) {
     renderFilterAndSortSections(mainBlock, filters, sorts);
     const mainBlockForFilmsComponent = renderMainBlockForFilms(mainBlock);
     render(mainBlockForFilmsComponent.getElement(), new NoFilmsComponent().getElement());
