@@ -1,5 +1,5 @@
 import {MONTHS} from './../const.js';
-import {createElement} from './../utils.js';
+import AbstractComponent from './abstract-component';
 
 const createGenreMarkup = (genres) => {
   return genres.map((genre) => {
@@ -163,26 +163,14 @@ const createPopupDetailFilmTemplate = (film) => {
   );
 };
 
-export default class PopupDetailFilm {
+export default class PopupDetailFilm extends AbstractComponent {
   constructor(film) {
-    this._film = film;
+    super();
 
-    this._element = null;
+    this._film = film;
   }
 
   getTemplate() {
     return createPopupDetailFilmTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
