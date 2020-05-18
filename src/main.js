@@ -8,6 +8,7 @@ import MainBlockFilmsComponent from './components/main-block-films.js';
 import FilmsAllComponent from './components/films-all.js';
 import FilmsTopComponent from './components/films-top.js';
 import FilmsMostCommentComponent from './components/films-most-comment.js';
+import NoFilmsComponent from './components/index-no-data.js';
 
 import FilmCardComponent from './components/film-card.js';
 
@@ -19,7 +20,7 @@ import {generateFilms} from './mocks/film-card.js';
 import {generateFilters} from './mocks/filters.js';
 import {sorts} from './mocks/sorts.js';
 
-const FILMS_NUMBER_IN_MAIN_LIST = 17;
+const FILMS_NUMBER_IN_MAIN_LIST = 10;
 const FILMS_NUMBER_COUNT = 5;
 const FILMS_TOP_RATED = 2;
 const FILMS_MOST_COMMENTED = 2;
@@ -37,10 +38,18 @@ const renderFilters = (allFilters, mainBlockContent) => {
 const renderSorts = (allSorts, mainBlockContent) => {
   render(mainBlockContent, new SortsComponent(sorts).getElement());
 };
-
-const renderMainBlocksForFilms = (mainBlockContent) => {
-  render(mainBlockContent, new MainBlockFilmsComponent().getElement());
+const renderFilterAndSortSections = (mainBlockContent, allFilters, allSorts) => {
+  renderFilters(allFilters, mainBlockContent);
+  renderSorts(allSorts, mainBlockContent);
 };
+
+const renderMainBlockForFilms = (mainBlockContent) => {
+  const mainBlockFilmsComponent = new MainBlockFilmsComponent();
+  render(mainBlockContent, mainBlockFilmsComponent.getElement());
+
+  return mainBlockFilmsComponent;
+};
+
 const renderAllFilmsBlock = (mainBlockFilms) => {
   render(mainBlockFilms, new FilmsAllComponent().getElement());
 };
@@ -77,9 +86,15 @@ const renderFooter = (totalFilms, footerStatistics) => {
 };
 
 const renderFilmsSection = (mainBlock) => {
-  renderFilters(filters, mainBlock);
-  renderSorts(sorts, mainBlock);
-  renderMainBlocksForFilms(mainBlock);
+  if (!films.length) {
+    renderFilterAndSortSections(mainBlock, filters, sorts);
+    const mainBlockForFilmsComponent = renderMainBlockForFilms(mainBlock);
+    render(mainBlockForFilmsComponent.getElement(), new NoFilmsComponent().getElement());
+    return;
+  }
+
+  renderFilterAndSortSections(mainBlock, filters, sorts);
+  renderMainBlockForFilms(mainBlock);
 
   const filmsBlock = mainBlock.querySelector(`.films`);
   renderAllFilmsBlock(filmsBlock);
