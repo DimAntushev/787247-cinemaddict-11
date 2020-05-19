@@ -173,4 +173,12 @@ export default class PopupDetailFilm extends AbstractComponent {
   getTemplate() {
     return createPopupDetailFilmTemplate(this._film);
   }
+
+  setCloseClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+  }
+
+  removeCloseClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, handler);
+  }
 }
