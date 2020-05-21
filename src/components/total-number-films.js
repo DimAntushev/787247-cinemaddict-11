@@ -1,4 +1,4 @@
-import {createElement} from './../utils.js';
+import AbstractComponent from './abstract-component.js';
 
 const createTotalNumbersFilmsTemplate = (totalNumberFilms) => {
   return (
@@ -6,26 +6,14 @@ const createTotalNumbersFilmsTemplate = (totalNumberFilms) => {
   );
 };
 
-export default class TotalNumbersFilms {
+export default class TotalNumbersFilms extends AbstractComponent {
   constructor(totalFilms) {
-    this._totalFilms = totalFilms;
+    super();
 
-    this._element = null;
+    this._totalFilms = totalFilms;
   }
 
   getTemplate() {
     return createTotalNumbersFilmsTemplate(this._totalFilms);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
