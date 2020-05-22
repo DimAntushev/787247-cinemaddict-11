@@ -158,6 +158,17 @@ const renderFilm = (film, filmsList) => {
   render(filmsList, filmCardComponent);
 };
 
+const getFilmsTopRated = (allFilms, count) => {
+  return allFilms.slice().sort((filmCurrent, filmNext) => {
+    return Number(filmNext.filmInfo.totalRating) - Number(filmCurrent.filmInfo.totalRating);
+  }).slice(0, count);
+};
+const getFilmsMostCommented = (allFilms, count) => {
+  return allFilms.slice().sort((filmCurrent, filmNext) => {
+    return filmNext.comments.length - filmCurrent.comments.length;
+  }).slice(0, count);
+};
+
 export default class Page {
   constructor(container, films, filters, sorts) {
     this._container = container;
@@ -201,17 +212,7 @@ export default class Page {
 
     const buttonShowMoreComponent = renderShowMoreButton(filmsListMainComponent.getElement());
 
-    const getFilmsTopRated = (allFilms, count) => {
-      return allFilms.slice().sort((filmCurrent, filmNext) => {
-        return Number(filmNext.filmInfo.totalRating) - Number(filmCurrent.filmInfo.totalRating);
-      }).slice(0, count);
-    };
     const filmRatedCards = getFilmsTopRated(this._films, FILMS_TOP_RATED);
-    const getFilmsMostCommented = (allFilms, count) => {
-      return allFilms.slice().sort((filmCurrent, filmNext) => {
-        return filmNext.comments.length - filmCurrent.comments.length;
-      }).slice(0, count);
-    };
     const filmMostCommentedCards = getFilmsMostCommented(this._films, FILMS_MOST_COMMENTED);
 
     const filmListMain = filmsListMainComponent.getElement().querySelector(`.films-list__container`);
