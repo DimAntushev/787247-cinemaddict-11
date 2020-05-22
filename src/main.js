@@ -1,11 +1,9 @@
 import {render} from './utils/render.js';
 
 import UserProfileComponent from './components/user-profile.js';
-import FiltersComponent from './components/filters.js';
-import SortsComponent from './components/sorts.js';
 import TotalNumbersFilmsComponent from './components/total-number-films.js';
 
-import PageController from './controllers/page-controller.js';
+import Page from './controllers/page.js';
 
 import {generateFilms} from './mocks/film-card.js';
 import {generateFilters} from './mocks/filters.js';
@@ -23,18 +21,7 @@ const renderHeader = (mainHeaderBlock) => {
   render(mainHeaderBlock, new UserProfileComponent());
 };
 
-const renderFilters = (allFilters, mainBlockContent) => {
-  render(mainBlockContent, new FiltersComponent(allFilters));
-};
-const renderSorts = (allSorts, mainBlockContent) => {
-  render(mainBlockContent, new SortsComponent(sorts));
-};
-const renderFilterAndSortSections = (mainBlockContent, allFilters, allSorts) => {
-  renderFilters(allFilters, mainBlockContent);
-  renderSorts(allSorts, mainBlockContent);
-};
-
-const pageController = new PageController(mainBlock);
+const pageController = new Page(mainBlock, films, filters, sorts);
 
 const renderFooter = (totalFilms, footerStatistics) => {
   render(footerStatistics, new TotalNumbersFilmsComponent(totalFilms));
@@ -42,8 +29,6 @@ const renderFooter = (totalFilms, footerStatistics) => {
 
 const init = () => {
   renderHeader(mainHeader);
-
-  renderFilterAndSortSections(mainBlock, filters, sorts);
 
   pageController.render(films);
 
