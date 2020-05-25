@@ -4,4 +4,10 @@ const sorts = [
   {name: `rating`, active: false},
 ];
 
-export {sorts};
+const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`
+};
+
+export {sorts, SortType};

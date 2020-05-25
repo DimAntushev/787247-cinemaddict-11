@@ -2,7 +2,7 @@ import AbstractComponent from './abstract-component.js';
 
 const createSortTemplate = (sort) => {
   return (
-    `<li><a href="#" class="sort__button ${sort.active ? `sort__button--active` : ``}">
+    `<li><a href="#" class="sort__button ${sort.active ? `sort__button--active` : ``}" data-sort-name=${sort.name}>
       Sort by ${sort.name}
     </a></li>`
   );
@@ -31,5 +31,16 @@ export default class Sorts extends AbstractComponent {
 
   getTemplate() {
     return createSortsTemplate(this._sorts);
+  }
+
+  removeActiveButton() {
+    this.getElement()
+      .querySelector(`.sort__button--active`)
+      .classList
+      .remove(`sort__button--active`);
+  }
+
+  setSortButtonClickHandler(handler) {
+    this.getElement().addEventListener(`click`, handler);
   }
 }
