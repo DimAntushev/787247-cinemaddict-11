@@ -222,13 +222,14 @@ export default class Page {
     renderTopFilmCards(filmRatedCards, this._filmListTop);
     renderMostCommentListCards(filmMostCommentedCards, this._filmListMostComment);
 
-    this._buttonShowMoreComponent.setClickHandler(() => {
+    const onButtonShowMoreClick = () => {
       this._startShowCardsLoad = renderMainFilmCards(this._films, this._filmListMain, this._startShowCardsLoad);
 
       if (this._startShowCardsLoad >= this._films.length) {
-        this._buttonShowMoreComponent.removeClickHandler(this._onButtonShowMoreClick);
+        this._buttonShowMoreComponent.removeClickHandler(onButtonShowMoreClick);
         remove(this._buttonShowMoreComponent);
       }
-    });
+    };
+    this._buttonShowMoreComponent.setClickHandler(onButtonShowMoreClick);
   }
 }
