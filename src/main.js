@@ -3,7 +3,7 @@ import {render} from './utils/render.js';
 import UserProfileComponent from './components/user-profile.js';
 import TotalNumbersFilmsComponent from './components/total-number-films.js';
 
-import Page from './controllers/page.js';
+import PageController from './controllers/page.js';
 
 import {generateFilms} from './mocks/film-card.js';
 import {generateFilters} from './mocks/filters.js';
@@ -21,7 +21,7 @@ const renderHeader = (mainHeaderBlock) => {
   render(mainHeaderBlock, new UserProfileComponent());
 };
 
-const pageController = new Page(mainBlock, films, filters, sorts);
+const pageController = new PageController(mainBlock, films, filters, sorts);
 
 const renderFooter = (totalFilms, footerStatistics) => {
   render(footerStatistics, new TotalNumbersFilmsComponent(totalFilms));
