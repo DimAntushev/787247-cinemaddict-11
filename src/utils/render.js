@@ -26,7 +26,7 @@ const render = (container, component, position = `beforeend`) => {
 };
 
 const replace = (newElement, oldElement) => {
-  oldElement.getElement.replaceWith(newElement.getElement());
+  oldElement.getElement().replaceWith(newElement.getElement());
 };
 
 const remove = (element) => {

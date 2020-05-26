@@ -1,3 +1,8 @@
+const Keys = {
+  ESC: `Esc`,
+  ESCAPE: `Escape`
+};
+
 const getRandomNumber = (min, max) => {
   return Math.round(Math.random() * (max - min)) + min;
 };
@@ -10,5 +15,5 @@ const getRandomElementFromArray = (elements) => {
   return elements[getRandomNumber(0, elements.length - 1)];
 };
 
-export {getRandomNumber, getRandomNumberFloat, getRandomElementFromArray};
+export {getRandomNumber, getRandomNumberFloat, getRandomElementFromArray, Keys};
 
