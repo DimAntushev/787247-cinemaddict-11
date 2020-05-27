@@ -1,17 +1,19 @@
+import {formatDateFilmCard, formatRuntime} from './../utils/common.js';
 import AbstractComponent from './abstract-component.js';
 
 const createFilmCardTemplate = (film) => {
   const {comments, filmInfo, userDetails} = film;
 
-  const releaseDate = new Date(filmInfo.release.date);
+  const releaseDate = formatDateFilmCard(filmInfo.release.date);
+  const runtime = formatRuntime(filmInfo.runtime);
 
   return (
     `<article class="film-card">
       <h3 class="film-card__title">${filmInfo.title}</h3>
       <p class="film-card__rating">${filmInfo.totalRating}</p>
       <p class="film-card__info">
-        <span class="film-card__year">${releaseDate.getFullYear()}</span>
-        <span class="film-card__duration">${filmInfo.runtime}</span>
+        <span class="film-card__year">${releaseDate}</span>
+        <span class="film-card__duration">${runtime}</span>
         <span class="film-card__genre">${filmInfo.genre}</span>
       </p>
       <img src="${filmInfo.poster}" alt="" class="film-card__poster">
