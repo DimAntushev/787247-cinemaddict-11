@@ -1,6 +1,25 @@
+import moment from 'moment';
+
 const Keys = {
   ESC: `Esc`,
   ESCAPE: `Escape`
+};
+
+const formatDateFilmCard = (date) => {
+  return moment(date).format(`YYYY`);
+};
+
+const formatDateComment = (date) => {
+  return moment(date).format(`YYYY/MM/DD hh:mm`);
+};
+
+const formatRuntime = (date) => {
+  return moment(date).format(`h`) + `h ` + moment(date).format(`mm`) + `m`;
+
+};
+
+const formatDateFilmCardDetails = (date) => {
+  return moment(date).format(`DD MMMM YYYY`);
 };
 
 const getRandomNumber = (min, max) => {
@@ -15,5 +34,13 @@ const getRandomElementFromArray = (elements) => {
   return elements[getRandomNumber(0, elements.length - 1)];
 };
 
-export {getRandomNumber, getRandomNumberFloat, getRandomElementFromArray, Keys};
+export {
+  getRandomNumber,
+  getRandomNumberFloat,
+  getRandomElementFromArray,
+  formatDateFilmCard,
+  formatDateComment,
+  formatRuntime,
+  formatDateFilmCardDetails,
+  Keys};
 

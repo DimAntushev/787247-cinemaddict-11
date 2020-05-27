@@ -10,11 +10,6 @@ const MIN_NUMBER_NAMES = 1;
 const MAX_NUMBER_NAMES = 10;
 const MIN_NUMBER_GENRE = 1;
 const MAX_NUMBER_GENRE = 4;
-const MIN_HOURS = 1;
-const MAX_HOURS = 5;
-const MIN_MINUTES = 0;
-const MAX_MINUTES = 59;
-
 
 const names = [
   `Властелин колец: Братство колца`,
@@ -136,7 +131,7 @@ const generateFilm = (idFilm) => {
         date: getRandomDate(),
         releaseCountry: getRandomElementFromArray(countries)
       },
-      runtime: getRandomNumber(MIN_HOURS, MAX_HOURS) + `h ` + getRandomNumber(MIN_MINUTES, MAX_MINUTES) + `m`,
+      runtime: getRandomNumber(100000000, 1000000000000),
       genre: generateGenres(getRandomNumber(MIN_NUMBER_GENRE, MAX_NUMBER_GENRE)),
       description: getRandomElementFromArray(descriptions)
     },
