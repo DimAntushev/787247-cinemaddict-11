@@ -1,5 +1,5 @@
 import {MONTHS} from './../const.js';
-import AbstractComponent from './abstract-component';
+import AbstractSmartComponent from './abstract-smart-component';
 
 const createGenreMarkup = (genres) => {
   return genres.map((genre) => {
@@ -37,8 +37,8 @@ const createCommentsMarkup = (comments) => {
     }).join(`\n`);
 };
 
-const createPopupDetailFilmTemplate = (film) => {
-  const {filmInfo, comments} = film;
+const createPopupDetailFilmTemplate = (film, emoji) => {
+  const {comments, filmInfo, userDetails} = film;
 
   const releaseDate = new Date(filmInfo.release.date);
 
@@ -108,13 +108,30 @@ const createPopupDetailFilmTemplate = (film) => {
           </div>
 
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+            <input
+              type="checkbox"
+              class="film-details__control-input visually-hidden"
+              id="watchlist" name="watchlist"
+              ${userDetails.watchlist ? `checked` : ``}
+             >
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+            <input
+              type="checkbox"
+              class="film-details__control-input visually-hidden"
+              id="watched"
+              name="watched"
+              ${userDetails.alreadyWatched ? `checked` : ``}
+            >
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+            <input
+              type="checkbox"
+              class="film-details__control-input visually-hidden"
+              id="favorite"
+              name="favorite"
+              ${userDetails.favorite ? `checked` : ``}
+            >
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
@@ -128,7 +145,9 @@ const createPopupDetailFilmTemplate = (film) => {
             </ul>
 
             <div class="film-details__new-comment">
-              <div for="add-emoji" class="film-details__add-emoji-label"></div>
+              <div for="add-emoji" class="film-details__add-emoji-label">
+                ${emoji ? `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">` : ``}
+              </div>
 
               <label class="film-details__comment-label">
                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -163,22 +182,88 @@ const createPopupDetailFilmTemplate = (film) => {
   );
 };
 
-export default class PopupDetailFilm extends AbstractComponent {
+export default class PopupDetailFilm extends AbstractSmartComponent {
   constructor(film) {
     super();
 
     this._film = film;
+    this._currentEmoji = null;
+
+    this._closeClickHandler = null;
+    this._addToWatchlistClickHandler = null;
+    this._addMarkAsWatchedHandler = null;
+    this._addFavoriteHandler = null;
+
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
-    return createPopupDetailFilmTemplate(this._film);
+    return createPopupDetailFilmTemplate(this._film, this._currentEmoji);
+  }
+
+  recoveryListeners() {
+    this.setCloseClickHandler(this._closeClickHandler);
+    this.setAddToWatchlistClickHandler(this._addToWatchlistClickHandler);
+    this.setAddMarkAsWatchedHandler(this._addMarkAsWatchedHandler);
+    this.setAddFavoriteHandler(this._addFavoriteHandler);
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.film-details__emoji-list`).addEventListener(`click`, (evt) => {
+      const hideInputEmoji = this.getElement()
+        .querySelector(`.film-details__emoji-item[name="comment-emoji"]`);
+      if (evt.target.tagName === `INPUT`) {
+        this._currentEmoji = evt.target.id.replace(`emoji-`, ``);
+        hideInputEmoji.value = evt.target.value;
+        this.rerender();
+      }
+    });
+  }
+
+  reset() {
+    this._currentEmoji = null;
+
+    this.rerender();
   }
 
   setCloseClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+
+    this._closeClickHandler = handler;
   }
 
   removeCloseClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, handler);
+  }
+
+  setAddToWatchlistClickHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, handler);
+
+    this._addToWatchlistClickHandler = handler;
+  }
+
+  setAddMarkAsWatchedHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, handler);
+
+    this._addMarkAsWatchedHandler = handler;
+  }
+
+  setAddFavoriteHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, handler);
+
+    this._addFavoriteHandler = handler;
   }
 }
