@@ -10,7 +10,8 @@ import SortsComponent from '../components/sorts';
 
 import FilmController from './film.js';
 
-import {SortType} from '../mocks/sorts.js';
+import {sorts} from './../mocks/sorts.js';
+import {SortType} from './../mocks/sorts.js';
 
 const FILMS_NUMBER_COUNT = 5;
 const FILMS_TOP_RATED = 2;
@@ -89,10 +90,10 @@ const getFilmsMostCommented = (films, count) => {
 };
 
 export default class Page {
-  constructor(container, films, filters, sorts) {
+  constructor(container, filmsModel) {
     this._container = container;
-    this._films = films;
-    this._filmsDefault = films.slice();
+    this._films = null;
+    this._filmsModel = filmsModel;
     this._startShowCardsLoad = 0;
 
     this._showingFilmControllers = [];
@@ -114,6 +115,9 @@ export default class Page {
   }
 
   render() {
+    this._films = this._filmsModel.getFilms();
+    this._filmsDefault = this._films.slice();
+
     render(this._container, this._filtersComponent);
     render(this._container, this._sortsComponent);
 
