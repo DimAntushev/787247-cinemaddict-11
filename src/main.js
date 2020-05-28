@@ -5,9 +5,9 @@ import TotalNumbersFilmsComponent from './components/total-number-films.js';
 
 import FilmsModel from './models/films.js';
 import PageController from './controllers/page.js';
+import FiltersController from './controllers/filters.js';
 
 import {generateFilms} from './mocks/film-card.js';
-import {generateFilters} from './mocks/filters.js';
 
 const FILMS_NUMBER_IN_MAIN_LIST = 20;
 
@@ -15,23 +15,22 @@ const mainHeader = document.querySelector(`.header`);
 const mainBlock = document.querySelector(`.main`);
 
 const films = generateFilms(FILMS_NUMBER_IN_MAIN_LIST);
-const filters = generateFilters(films);
-
-const filmsModel = new FilmsModel(films);
 
 const renderHeader = (mainHeaderBlock) => {
   render(mainHeaderBlock, new UserProfileComponent());
 };
-
-const pageController = new PageController(mainBlock, filmsModel);
-
 const renderFooter = (totalFilms, footerStatistics) => {
   render(footerStatistics, new TotalNumbersFilmsComponent(totalFilms));
 };
 
+const filmsModel = new FilmsModel(films);
+const pageController = new PageController(mainBlock, filmsModel);
+const filtersController = new FiltersController(mainBlock, filmsModel);
+
 const init = () => {
   renderHeader(mainHeader);
 
+  filtersController.render();
   pageController.render(films);
 
   const footerStatistics = document.querySelector(`.footer__statistics`);

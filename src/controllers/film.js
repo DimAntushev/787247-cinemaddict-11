@@ -91,7 +91,7 @@ export default class FilmController {
     // Датабиндинг
 
     this._filmCardComponent.setAddToWatchlistClickHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film.id, Object.assign({}, film, {
         userDetails: {
           watchlist: !film.userDetails.watchlist,
           alreadyWatched: film.userDetails.alreadyWatched,
@@ -102,7 +102,7 @@ export default class FilmController {
     });
 
     this._filmCardComponent.setAddMarkAsWatchedHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film.id, Object.assign({}, film, {
         userDetails: {
           watchlist: film.userDetails.watchlist,
           alreadyWatched: !film.userDetails.alreadyWatched,
@@ -113,7 +113,7 @@ export default class FilmController {
     });
 
     this._filmCardComponent.setAddFavorite(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film.id, Object.assign({}, film, {
         userDetails: {
           watchlist: film.userDetails.watchlist,
           alreadyWatched: film.userDetails.alreadyWatched,
@@ -124,7 +124,7 @@ export default class FilmController {
     });
 
     this._popupDetailFilmComponent.setAddToWatchlistClickHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film.id, Object.assign({}, film, {
         userDetails: {
           watchlist: !film.userDetails.watchlist,
           alreadyWatched: film.userDetails.alreadyWatched,
@@ -135,7 +135,7 @@ export default class FilmController {
     });
 
     this._popupDetailFilmComponent.setAddMarkAsWatchedHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film.id, Object.assign({}, film, {
         userDetails: {
           watchlist: film.userDetails.watchlist,
           alreadyWatched: !film.userDetails.alreadyWatched,
@@ -146,7 +146,7 @@ export default class FilmController {
     });
 
     this._popupDetailFilmComponent.setAddFavoriteHandler(() => {
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(this, film.id, Object.assign({}, film, {
         userDetails: {
           watchlist: film.userDetails.watchlist,
           alreadyWatched: film.userDetails.alreadyWatched,
@@ -164,6 +164,11 @@ export default class FilmController {
     }
   }
 
+  destroy() {
+    remove(this._filmCardComponent);
+    remove(this._popupDetailFilmComponent);
+  }
+
   _showPopupFilm() {
     this._onViewChange();
     this._mode = Mode.OPEN;
@@ -175,7 +180,6 @@ export default class FilmController {
     this._popupDetailFilmComponent.reset();
     remove(this._popupDetailFilmComponent);
   }
-
 
   setDefaultView() {
     if (this._mode === Mode.OPEN) {
