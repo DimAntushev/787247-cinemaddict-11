@@ -33,6 +33,12 @@ export default class Sorts extends AbstractComponent {
     return createSortsTemplate(this._sorts);
   }
 
+  reset() {
+    const allButtons = this.getElement().querySelectorAll(`.sort__button`);
+    allButtons.forEach((button) => button.classList.remove(`sort__button--active`));
+    allButtons[0].classList.add(`sort__button--active`);
+  }
+
   removeActiveButton() {
     this.getElement()
       .querySelector(`.sort__button--active`)
