@@ -1,9 +1,7 @@
 import {Keys} from './../utils/common.js';
 import {remove, render, replace, RenderPosition} from './../utils/render.js';
-import CommentsModel from './../models/comments.js';
 import FilmCardComponent from './../components/film-card.js';
 import PopupDetailFilmComponent from './../components/popup-detail-film.js';
-import CommentsController from './../controllers/comments.js';
 
 const Mode = {
   OPEN: `open`,
@@ -11,29 +9,26 @@ const Mode = {
 };
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange, filmsModel) {
+  constructor(container, onDataChange, onViewChange, onCommentChange, filmsModel) {
     this._container = container;
     this._mode = null;
     this._film = null;
     this._commentsBlock = null;
     this._filmsModel = filmsModel;
+    this._commentsField = null;
 
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
-    this._onCommentChange = this._onCommentChange.bind(this);
+    this._onCommentChange = onCommentChange;
 
-    this._commentsModel = new CommentsModel();
-    this._commentsModel.setAddChangeCommentsHandler(this._onCommentChange);
+    this._onEnterDown = this._onEnterDown.bind(this);
 
     this._filmCardComponent = null;
     this._popupDetailFilmComponent = null;
-    this._commentsController = null;
   }
 
   render(film) {
     this._film = film;
-
-    this._commentsModel.setComments(this._film.comments);
 
     const oldFilmCardComponent = this._filmCardComponent;
     const oldPopupDetailFilmComponent = this._popupDetailFilmComponent;
@@ -42,22 +37,18 @@ export default class FilmController {
     this._filmCardComponent = new FilmCardComponent(this._film);
     this._popupDetailFilmComponent = new PopupDetailFilmComponent(this._film);
 
-    const commentsBlock = this._popupDetailFilmComponent.getElement()
-      .querySelector(`.form-details__bottom-container`);
-
-    this._commentsController = new CommentsController(commentsBlock, this._commentsModel, this._filmsModel, this._onCommentChange);
-    this._commentsController.render();
-
     const addListenerOpenOnElementsFilmCard = () => {
       this._filmCardComponent.setTitleClickHandler(onTitleFilmClick);
       this._filmCardComponent.setPosterClickHandler(onPosterFilmClick);
       this._filmCardComponent.setCommentsClickHandler(onCommentsFilmClick);
 
+      document.removeEventListener(`keydown`, this._onEnterDown);
       document.removeEventListener(`keydown`, onEscapeClosePopupDown);
     };
 
     const addListenerCloseOnElementsFilmCard = () => {
       this._popupDetailFilmComponent.setCloseClickHandler(onButtonClosePopupFilmDetail);
+      document.addEventListener(`keydown`, this._onEnterDown);
       document.addEventListener(`keydown`, onEscapeClosePopupDown);
     };
 
@@ -98,7 +89,6 @@ export default class FilmController {
 
     const onEscapeClosePopupDown = (evt) => {
       const isEscape = evt.key === Keys.ESCAPE || evt.key === Keys.ESC;
-
       if (isEscape) {
         this._closePopupFilm();
 
@@ -109,6 +99,10 @@ export default class FilmController {
     addListenerOpenOnElementsFilmCard();
 
     // Датабиндинг
+
+    this._popupDetailFilmComponent.setDeleteClickHandler((idFilm, idComment) => {
+      this._onCommentChange(idFilm, idComment, null);
+    });
 
     this._filmCardComponent.setAddToWatchlistClickHandler(() => {
       this._onDataChange(this, film.id, Object.assign({}, film, {
@@ -195,6 +189,33 @@ export default class FilmController {
     }
   }
 
+  _generateComment() {
+    const popupElement = this._popupDetailFilmComponent.getElement();
+    const commentUser = popupElement.querySelector(`.film-details__comment-input`).value;
+    const emotionComment = popupElement.querySelector(`.film-details__add-emoji-label`).dataset.emoji;
+    if (!emotionComment) {
+      return false;
+    }
+    const idComment = this._film.comments.length;
+    return {
+      id: idComment,
+      emotion: emotionComment,
+      comment: commentUser,
+      author: `Джек Ворбоей`,
+      date: Date.now()
+    };
+  }
+
+  _onEnterDown(evt) {
+    if (evt.key === Keys.ENTER) {
+      const idFilm = Number(this._popupDetailFilmComponent.getElement().dataset.idFilm);
+      const newComment = this._generateComment();
+      if (newComment) {
+        this._onCommentChange(idFilm, null, newComment);
+        this._popupDetailFilmComponent.rerender();
+      }
+    }
+  }
   _showPopupFilm() {
     this._onViewChange();
     this._mode = Mode.OPEN;
@@ -202,22 +223,8 @@ export default class FilmController {
   }
 
   _closePopupFilm() {
+    this._popupDetailFilmComponent.resetCommentFilter();
     this._mode = Mode.CLOSE;
     remove(this._popupDetailFilmComponent);
-  }
-
-  _onCommentChange(commentsController, idComment, newComment) {
-    let isSuccess;
-    if (newComment === null) {
-      isSuccess = this._commentsModel.removeComment(idComment);
-    }
-
-    if (idComment === null) {
-      isSuccess = this._commentsModel.addComment(newComment);
-    }
-
-    if (isSuccess) {
-      commentsController.render();
-    }
   }
 }
