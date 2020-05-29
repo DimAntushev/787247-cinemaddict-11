@@ -2,8 +2,8 @@ import {FilterType} from './../const.js';
 import {getFilmsByFilter} from './../utils/filters.js';
 
 export default class Films {
-  constructor(films) {
-    this._films = films;
+  constructor() {
+    this._films = [];
     this._activeFilter = FilterType.ALL;
 
     this._dataChangeHandlers = [];
@@ -22,7 +22,7 @@ export default class Films {
   }
 
   setFilms(films) {
-    this._films = films;
+    this._films = Array.from(films);
     this._callHandlers(this._dataChangeHandlers);
   }
 

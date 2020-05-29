@@ -9,7 +9,7 @@ import FiltersController from './controllers/filters.js';
 
 import {generateFilms} from './mocks/film-card.js';
 
-const FILMS_NUMBER_IN_MAIN_LIST = 15;
+const FILMS_NUMBER_IN_MAIN_LIST = 10000;
 
 const mainHeader = document.querySelector(`.header`);
 const mainBlock = document.querySelector(`.main`);
@@ -23,7 +23,8 @@ const renderFooter = (totalFilms, footerStatistics) => {
   render(footerStatistics, new TotalNumbersFilmsComponent(totalFilms));
 };
 
-const filmsModel = new FilmsModel(films);
+const filmsModel = new FilmsModel();
+filmsModel.setFilms(films);
 const pageController = new PageController(mainBlock, filmsModel);
 const filtersController = new FiltersController(mainBlock, filmsModel);
 
