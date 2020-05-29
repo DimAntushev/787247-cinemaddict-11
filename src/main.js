@@ -9,7 +9,7 @@ import FiltersController from './controllers/filters.js';
 
 import {generateFilms} from './mocks/film-card.js';
 
-const FILMS_NUMBER_IN_MAIN_LIST = 10000;
+const FILMS_NUMBER_IN_MAIN_LIST = 100;
 
 const mainHeader = document.querySelector(`.header`);
 const mainBlock = document.querySelector(`.main`);

@@ -1,4 +1,3 @@
-import {Keys} from './../utils/common.js';
 import {formatDateComment} from "../utils/common";
 import AbstractSmartComponent from './abstract-smart-component.js';
 
@@ -33,7 +32,7 @@ const createCommentsMarkup = (comments) => {
 
 const createCommentsTemplate = (comments, emoji) => {
   return (
-    `<section class="film-details__comments-wrap">
+    `<section class="film-details__comments-wrap" data-id-next-comment = ${comments.length}>
       <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
       <ul class="film-details__comments-list">
@@ -46,7 +45,7 @@ const createCommentsTemplate = (comments, emoji) => {
         </div>
 
         <label class="film-details__comment-label">
-          <textarea data-id-next-comment = ${comments.length} class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
         </label>
 
         <div class="film-details__emoji-list">
@@ -123,15 +122,6 @@ export default class CommentsComponent extends AbstractSmartComponent {
       if (isDeleteButton) {
         const idComment = Number(evt.target.dataset.idComment);
         handler(idComment);
-      }
-    });
-  }
-
-  setCtrlEnterDownHandler(handler) {
-    this.getElement().querySelector(`.film-details__comьent-input`).addEventListener(`keydown`, (evt) => {
-      if (evt.target.key === Keys.ENTER && evt.target.key === Keys.Ctrl) {
-        console.log(`Сочетание клавиш!`);
-        handler();
       }
     });
   }

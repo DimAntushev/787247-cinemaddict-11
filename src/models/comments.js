@@ -12,12 +12,12 @@ export default class Comments {
   }
 
   setComments(comments) {
-    this._comments = Array.from(comments);
-    this._callHandlers(this._changeCommentsHandlers);
+    this._comments = comments;
   }
 
   addComment(newComment) {
-    this._comments.push(newComment);
+    this._comments = [].concat(this._comments, newComment);
+    this._callHandlers(this._changeCommentsHandlers);
   }
 
   removeComment(id) {

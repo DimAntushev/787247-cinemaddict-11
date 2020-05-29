@@ -4,7 +4,7 @@ const Keys = {
   ESC: `Esc`,
   ESCAPE: `Escape`,
   ENTER: `Enter`,
-  CTRL: `Ctrl`
+  CTRL_LEFT: `ControlLeft`
 };
 
 const formatDateFilmCard = (date) => {

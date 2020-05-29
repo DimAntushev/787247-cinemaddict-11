@@ -32,14 +32,15 @@ export default class FilmController {
 
   render(film) {
     this._film = film;
-    this._commentsModel.setComments(film.comments);
+
+    this._commentsModel.setComments(this._film.comments);
 
     const oldFilmCardComponent = this._filmCardComponent;
     const oldPopupDetailFilmComponent = this._popupDetailFilmComponent;
 
     this._mainFooter = document.querySelector(`.footer`);
-    this._filmCardComponent = new FilmCardComponent(film);
-    this._popupDetailFilmComponent = new PopupDetailFilmComponent(film);
+    this._filmCardComponent = new FilmCardComponent(this._film);
+    this._popupDetailFilmComponent = new PopupDetailFilmComponent(this._film);
 
     const commentsBlock = this._popupDetailFilmComponent.getElement()
       .querySelector(`.form-details__bottom-container`);
@@ -207,10 +208,11 @@ export default class FilmController {
 
   _onCommentChange(commentsController, idComment, newComment) {
     let isSuccess;
-
-    if (newComment) {
+    if (newComment === null) {
       isSuccess = this._commentsModel.removeComment(idComment);
-    } else {
+    }
+
+    if (idComment === null) {
       isSuccess = this._commentsModel.addComment(newComment);
     }
 

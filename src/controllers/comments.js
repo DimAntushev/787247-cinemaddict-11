@@ -1,5 +1,6 @@
 import {render, replace} from './../utils/render.js';
 import CommentsComponent from './../components/comments.js';
+import {getRandomElementFromArray, Keys} from "../utils/common";
 
 export default class CommentsController {
   constructor(container, commentsModel, filmsModel, onCommentChange) {
@@ -19,9 +20,6 @@ export default class CommentsController {
     this._commentsComponent = new CommentsComponent(this._commentsModel.getComments());
     this._commentsComponent.setDeleteClickHandler((idComment) => {
       this._onCommentChange(this, idComment, null);
-    });
-    this._commentsComponent.setCtrlEnterDownHandler(() => {
-      console.log(`Сочетание клавиш!`);
     });
 
     if (oldCommentsComponent) {
