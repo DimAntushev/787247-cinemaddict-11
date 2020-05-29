@@ -2,6 +2,7 @@ import {Keys} from './../utils/common.js';
 import {remove, render, replace, RenderPosition} from './../utils/render.js';
 import FilmCardComponent from './../components/film-card.js';
 import PopupDetailFilmComponent from './../components/popup-detail-film.js';
+import {encode} from 'he';
 
 const Mode = {
   OPEN: `open`,
@@ -191,11 +192,10 @@ export default class FilmController {
 
   _generateComment() {
     const popupElement = this._popupDetailFilmComponent.getElement();
-    const commentUser = popupElement.querySelector(`.film-details__comment-input`).value;
+    const commentUserNotSanitized = popupElement.querySelector(`.film-details__comment-input`).value;
+    const commentUser = encode(commentUserNotSanitized);
     const emotionComment = popupElement.querySelector(`.film-details__add-emoji-label`).dataset.emoji;
-    if (!emotionComment) {
-      return false;
-    }
+
     const idComment = this._film.comments.length;
     return {
       id: idComment,
@@ -210,10 +210,8 @@ export default class FilmController {
     if (evt.key === Keys.ENTER) {
       const idFilm = Number(this._popupDetailFilmComponent.getElement().dataset.idFilm);
       const newComment = this._generateComment();
-      if (newComment) {
-        this._onCommentChange(idFilm, null, newComment);
-        this._popupDetailFilmComponent.rerender();
-      }
+      this._onCommentChange(idFilm, null, newComment);
+      this._popupDetailFilmComponent.rerender();
     }
   }
   _showPopupFilm() {

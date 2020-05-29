@@ -1,6 +1,7 @@
 import {formatDateFilmCardDetails, formatRuntime} from './../utils/common.js';
 import AbstractSmartComponent from './abstract-smart-component';
-import {formatDateComment} from "./../utils/common";
+import {formatDateComment} from './../utils/common';
+import {encode} from 'he';
 
 const createGenreMarkup = (genres) => {
   return genres.map((genre) => {
@@ -9,8 +10,9 @@ const createGenreMarkup = (genres) => {
 };
 
 const createCommentMarkup = (commentUser) => {
-  const {id, emotion, date, author, comment} = commentUser;
+  const {id, emotion, date, author, comment: notSanitizedComment} = commentUser;
 
+  const comment = encode(notSanitizedComment);
   const commentDate = formatDateComment(date);
 
   return (
