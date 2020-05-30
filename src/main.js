@@ -6,6 +6,7 @@ import TotalNumbersFilmsComponent from './components/total-number-films.js';
 import FilmsModel from './models/films.js';
 import PageController from './controllers/page.js';
 import FiltersController from './controllers/filters.js';
+import StatsController from './controllers/stats.js';
 
 import {generateFilms} from './mocks/film-card.js';
 
@@ -27,15 +28,20 @@ const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
 const pageController = new PageController(mainBlock, filmsModel);
 const filtersController = new FiltersController(mainBlock, filmsModel);
+const statsController = new StatsController(mainBlock, filmsModel);
 
 const init = () => {
   renderHeader(mainHeader);
 
   filtersController.render();
   pageController.render(films);
+  pageController.hide();
+  statsController.render();
 
   const footerStatistics = document.querySelector(`.footer__statistics`);
   renderFooter(FILMS_NUMBER_IN_MAIN_LIST, footerStatistics);
 };
 
 init();
+
+export {pageController, statsController, filmsModel};

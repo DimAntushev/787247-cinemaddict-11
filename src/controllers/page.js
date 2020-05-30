@@ -167,6 +167,16 @@ export default class Page {
     this._buttonShowMore();
   }
 
+  show() {
+    this._filmsBlockComponent.show();
+    this._sortsComponent.show();
+  }
+
+  hide() {
+    this._filmsBlockComponent.hide();
+    this._sortsComponent.hide();
+  }
+
   _buttonShowMore() {
     remove(this._buttonShowMoreComponent);
     if (this._films.length <= FILMS_NUMBER_COUNT) {
