@@ -83,13 +83,9 @@ const getFilmsTopRated = (films, count) => {
     return Number(filmNext.filmInfo.totalRating) - Number(filmCurrent.filmInfo.totalRating);
   }).slice(0, count);
 
-  console.log(filmsSort);
-
   const isNoEmpty = filmsSort.findIndex((film) => {
     return film.filmInfo.totalRating !== 0;
   });
-
-  console.log(`Это isNoEmpty`, isNoEmpty);
 
   if (isNoEmpty !== -1) {
     return filmsSort;
