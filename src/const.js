@@ -13,5 +13,12 @@ const MONTHS = {
   11: `December`
 };
 
-export {MONTHS};
+const FilterType = {
+  ALL: `All movies`,
+  WATCHLIST: `Watchlist`,
+  HISTORY: `History`,
+  FAVORITES: `Favorites`
+};
+
+export {MONTHS, FilterType};
 

@@ -2,7 +2,9 @@ import moment from 'moment';
 
 const Keys = {
   ESC: `Esc`,
-  ESCAPE: `Escape`
+  ESCAPE: `Escape`,
+  ENTER: `Enter`,
+  CTRL_LEFT: `ControlLeft`
 };
 
 const formatDateFilmCard = (date) => {

@@ -2,7 +2,7 @@ import AbstractComponent from './abstract-component.js';
 
 export default class AbstractSmartComponent extends AbstractComponent {
   recoveryListeners() {
-    throw new Error(`Данные метод нельзя испольщовать в экземпляре абстрактного компонента`);
+    throw new Error(`Данные метод нельзя использовать в экземпляре абстрактного компонента`);
   }
 
   rerender() {

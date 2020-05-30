@@ -1,7 +1,7 @@
 import {getRandomNumber, getRandomNumberFloat, getRandomElementFromArray} from '../utils/common.js';
 
 const MIN_NUMBER_COMMENTS = 1;
-const MAX_NUMBER_COMMENTS = 17;
+const MAX_NUMBER_COMMENTS = 10;
 const MIN_RATING = 4;
 const MAX_RATING = 10;
 const MIN_AGE_RATING = 0;

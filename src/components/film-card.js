@@ -34,6 +34,7 @@ const createFilmCardTemplate = (film) => {
   );
 };
 
+
 export default class FilmCard extends AbstractComponent {
   constructor(film) {
     super();
