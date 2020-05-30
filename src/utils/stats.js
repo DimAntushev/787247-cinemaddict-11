@@ -1,4 +1,4 @@
-const genres = [
+const GENRES = [
   `Drama`,
   `Western`,
   `Thriller`,
@@ -35,7 +35,7 @@ const getCountFilmsOfGenre = (genre, films) => {
 };
 
 const getGenresAndCount = (films) => {
-  return genres.map((genreFilm) => {
+  return GENRES.map((genreFilm) => {
     return {
       genre: genreFilm,
       countFilms: getCountFilmsOfGenre(genreFilm, films)
@@ -43,20 +43,20 @@ const getGenresAndCount = (films) => {
   });
 };
 
-const getTopGenre = (genresFilm) => {
-  let max = 0;
-  let currentGenre = ``;
-  genresFilm.forEach((genre) => {
-    if (genre.countFilms > max) {
-      max = genre.countFilms;
-      currentGenre = genre.genre;
+const getTopGenre = (genres) => {
+  let maxFilms = 0;
+  let result = ``;
+  genres.forEach((genre) => {
+    if (genre.countFilms > maxFilms) {
+      maxFilms = genre.countFilms;
+      result = genre.genre;
     }
   });
 
-  return currentGenre;
+  return result;
 };
 
-const getUserInfo = (films, genresFilm) => {
+const getUserInfo = (films, genres) => {
   let count = 0;
   let totalDurationUser = 0;
   films.forEach((film) => {
@@ -69,8 +69,8 @@ const getUserInfo = (films, genresFilm) => {
   return {
     alreadyWatched: count,
     totalDuration: totalDurationUser,
-    topGenre: getTopGenre(genresFilm)
+    topGenre: getTopGenre(genres)
   };
 };
 
-export {genres, FilterTypeStats, getGenresAndCount, getUserInfo};
+export {GENRES, FilterTypeStats, getGenresAndCount, getUserInfo};

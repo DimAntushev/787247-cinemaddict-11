@@ -19,7 +19,7 @@ const formatDateComment = (date) => {
   return moment(date).format(`YYYY/MM/DD hh:mm`);
 };
 
-const getFilmsToday = (films) => {
+const getTodayFilms = (films) => {
   const dateNow = new Date();
 
   return films.filter((film) => {
@@ -27,7 +27,7 @@ const getFilmsToday = (films) => {
   });
 };
 
-const getFilmsWeek = (films) => {
+const getFilmsByWeek = (films) => {
   const date = new Date();
   date.setDate(date.getDate() - DAY_OF_WEEK);
 
@@ -36,7 +36,7 @@ const getFilmsWeek = (films) => {
   });
 };
 
-const getFilmsMonth = (films) => {
+const getFilmsByMonth = (films) => {
   const dateNow = new Date();
   dateNow.setDate(dateNow.getDate() - DAY_OF_MONTH);
 
@@ -45,7 +45,7 @@ const getFilmsMonth = (films) => {
   });
 };
 
-const getFilmsYear = (films) => {
+const getFilmsByYear = (films) => {
   const dateNow = new Date();
   dateNow.setDate(dateNow.getDate() - DAY_OF_YEAR);
 
@@ -101,10 +101,10 @@ export {
   formatDateComment,
   formatRuntime,
   formatDateFilmCardDetails,
-  getFilmsToday,
-  getFilmsWeek,
-  getFilmsMonth,
-  getFilmsYear,
+  getTodayFilms,
+  getFilmsByWeek,
+  getFilmsByMonth,
+  getFilmsByYear,
   getAchiveUser,
   Keys};
 

@@ -1,5 +1,5 @@
 import {getRandomNumber, getRandomNumberFloat, getRandomElementFromArray} from '../utils/common.js';
-import {genres} from './../utils/stats.js';
+import {GENRES} from './../utils/stats.js';
 
 const MIN_NUMBER_COMMENTS = 1;
 const MAX_NUMBER_COMMENTS = 10;
@@ -83,10 +83,10 @@ const generateNames = (count = MIN_NUMBER_NAMES) => {
 };
 const generateGenres = (genresFilm, count = MIN_NUMBER_GENRE) => {
   let genresGenerate = [];
-  const genresFilms = genres.slice();
+  const genresFilms = GENRES.slice();
 
   while (count) {
-    const genreRandomNumber = getRandomNumber(0, genres.length - 1);
+    const genreRandomNumber = getRandomNumber(0, GENRES.length - 1);
     genresGenerate.push(genresFilms[genreRandomNumber]);
     genresFilms.splice(genreRandomNumber, 1);
 
@@ -127,7 +127,7 @@ const generateFilm = (idFilm) => {
         releaseCountry: getRandomElementFromArray(countries)
       },
       runtime: getRandomNumber(100000000, 1000000000000),
-      genre: generateGenres(genres, getRandomNumber(MIN_NUMBER_GENRE, MAX_NUMBER_GENRE)),
+      genre: generateGenres(GENRES, getRandomNumber(MIN_NUMBER_GENRE, MAX_NUMBER_GENRE)),
       description: getRandomElementFromArray(descriptions)
     },
     userDetails: {
