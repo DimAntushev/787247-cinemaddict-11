@@ -2,6 +2,7 @@ import {FilterType} from './../const.js';
 import {render, replace} from './../utils/render.js';
 import {getFilmsByFilter} from './../utils/filters.js';
 import FiltersComponent from './../components/filters.js';
+import {pageController, statsController} from './../main.js';
 
 export default class Filters {
   constructor(container, filmsModel) {
@@ -32,7 +33,15 @@ export default class Filters {
     this._filtersComponent = new FiltersComponent(filters);
 
     this._filtersComponent.setFilterClickHandler((filterType) => {
+      pageController.show();
+      statsController.hide();
       this._onFilterChange(filterType);
+    });
+
+    this._filtersComponent.setStatsClickHandler(() => {
+      statsController.show();
+      pageController.hide();
+      this._filtersComponent.reset();
     });
 
     if (oldFiltersComponent) {

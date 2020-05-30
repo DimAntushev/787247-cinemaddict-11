@@ -46,4 +46,15 @@ export default class Filters extends AbstractSmartComponent {
       }
     });
   }
+
+  setStatsClickHandler(handler) {
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, handler);
+  }
+
+  reset() {
+    const allElementsMenu = this.getElement().querySelectorAll(`.main-navigation__item`);
+    this.getElement().querySelector(`.main-navigation__item--active`).classList
+      .remove(`main-navigation__item--active`);
+    allElementsMenu[0].classList.add(`main-navigation__item--active`);
+  }
 }
