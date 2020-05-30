@@ -6,6 +6,14 @@ const genres = [
   `Adventure`
 ];
 
+const FilterTypeStats = {
+  ALL_TIME: `all time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
+};
+
 const searchGenreOfFilm = (film, genre) => {
   return film.filmInfo.genre.findIndex((genreFilm) => {
     const isWatching = film.userDetails.alreadyWatched;
@@ -27,15 +35,7 @@ const getCountFilmsOfGenre = (genre, films) => {
 };
 
 const getGenresAndCount = (films) => {
-  const genresFilm = [
-    `Drama`,
-    `Western`,
-    `Thriller`,
-    `Comedy`,
-    `Adventure`
-  ];
-
-  return genresFilm.map((genreFilm) => {
+  return genres.map((genreFilm) => {
     return {
       genre: genreFilm,
       countFilms: getCountFilmsOfGenre(genreFilm, films)
@@ -73,4 +73,4 @@ const getUserInfo = (films, genresFilm) => {
   };
 };
 
-export {genres, getGenresAndCount, getUserInfo};
+export {genres, FilterTypeStats, getGenresAndCount, getUserInfo};

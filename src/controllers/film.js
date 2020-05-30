@@ -122,7 +122,7 @@ export default class FilmController {
           watchlist: film.userDetails.watchlist,
           alreadyWatched: !film.userDetails.alreadyWatched,
           favorite: film.userDetails.favorite,
-          watchingDate: film.userDetails.watchingDate
+          watchingDate: new Date()
         }
       }));
     });
@@ -155,7 +155,7 @@ export default class FilmController {
           watchlist: film.userDetails.watchlist,
           alreadyWatched: !film.userDetails.alreadyWatched,
           favorite: film.userDetails.favorite,
-          watchingDate: film.userDetails.watchingDate
+          watchingDate: new Date()
         }
       }));
     });

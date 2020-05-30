@@ -79,14 +79,36 @@ const renderFilmCards = (filmCards, filmsList, onDataChange, onViewChange, onCom
 };
 
 const getFilmsTopRated = (films, count) => {
-  return films.slice().sort((filmCurrent, filmNext) => {
+  const filmsSort = films.slice().sort((filmCurrent, filmNext) => {
     return Number(filmNext.filmInfo.totalRating) - Number(filmCurrent.filmInfo.totalRating);
   }).slice(0, count);
+
+  console.log(filmsSort);
+
+  const isNoEmpty = filmsSort.findIndex((film) => {
+    return film.filmInfo.totalRating !== 0;
+  });
+
+  console.log(`Это isNoEmpty`, isNoEmpty);
+
+  if (isNoEmpty !== -1) {
+    return filmsSort;
+  }
+
+  return false;
 };
 const getFilmsMostCommented = (films, count) => {
-  return films.slice().sort((filmCurrent, filmNext) => {
+  const filmsSort = films.slice().sort((filmCurrent, filmNext) => {
     return filmNext.comments.length - filmCurrent.comments.length;
   }).slice(0, count);
+
+  const isNoEmpty = filmsSort.findIndex((film) => film.comments.length !== 0);
+
+  if (isNoEmpty !== -1) {
+    return filmsSort;
+  }
+
+  return false;
 };
 
 export default class Page {
@@ -149,22 +171,28 @@ export default class Page {
       render(this._filmsBlockComponent.getElement(), new NoFilmsComponent());
       return;
     }
-    renderAllFilmsBlock(this._filmsBlockComponent, this._filmsAllComponent);
-    renderTopFilmsBlock(this._filmsBlockComponent, this._filmsTopComponent);
-    renderMostCommentFilmsBlock(this._filmsBlockComponent, this._filmsMostCommentComponent);
 
     const filmRatedCards = getFilmsTopRated(this._films, FILMS_TOP_RATED);
     const filmMostCommentedCards = getFilmsMostCommented(this._films, FILMS_MOST_COMMENTED);
 
+    renderAllFilmsBlock(this._filmsBlockComponent, this._filmsAllComponent);
     this._showingFilmControllers = renderMainFilmCards(this._films, this._filmListMain, this._startShowCardsLoad,
         this._onDataChange, this._onViewChange, this._onCommentChange, this._filmsModel);
 
+    if (filmRatedCards) {
+      renderTopFilmsBlock(this._filmsBlockComponent, this._filmsTopComponent);
+      renderTopFilmCards(filmRatedCards, this._filmListTop, this._onDataChange, this._onViewChange,
+          this._onCommentChange, this._filmsModel);
+    }
+    if (filmMostCommentedCards) {
+      renderMostCommentFilmsBlock(this._filmsBlockComponent, this._filmsMostCommentComponent);
+      renderMostCommentListCards(filmMostCommentedCards, this._filmListMostComment, this._onDataChange,
+          this._onViewChange, this._onCommentChange, this._filmsModel);
+      this._buttonShowMore();
+    }
+
     this._startShowCardsLoad += FILMS_NUMBER_COUNT;
-    renderTopFilmCards(filmRatedCards, this._filmListTop, this._onDataChange, this._onViewChange,
-        this._onCommentChange, this._filmsModel);
-    renderMostCommentListCards(filmMostCommentedCards, this._filmListMostComment, this._onDataChange,
-        this._onViewChange, this._onCommentChange, this._filmsModel);
-    this._buttonShowMore();
+
   }
 
   show() {

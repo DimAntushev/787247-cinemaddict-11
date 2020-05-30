@@ -1,7 +1,9 @@
-import AbstractSmartComponent from './abstract-smart-component.js';
+import {FilterTypeStats} from './../utils/stats.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
+import {getAchiveUser} from './../utils/common.js';
+import AbstractComponent from './abstract-smart-component.js';
 
 const getGenres = (genresFilms) => {
   const genres = [];
@@ -23,17 +25,17 @@ const getCountGenres = (genresFilms) => {
   return genreCount;
 };
 
-const createStatsTemplate = (userInfo) => {
+const createStatsTemplate = (userInfo, activeFilter, filmsCount) => {
 
   const {alreadyWatched, totalDuration, topGenre} = userInfo;
-
   const hoursTotalDuration = moment(totalDuration).format(`hh`);
   const minutesTotalDuration = moment(totalDuration).format(`mm`);
+  const achiveUser = getAchiveUser(filmsCount);
 
   return (
     `<section class="statistic">
       <p class="statistic__rank">
-        Your rank
+        Your rank ${achiveUser}
         <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
         <span class="statistic__rank-label">Sci-Fighter</span>
       </p>
@@ -41,19 +43,19 @@ const createStatsTemplate = (userInfo) => {
       <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
         <p class="statistic__filters-description">Show stats:</p>
 
-        <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
+        <input ${activeFilter === FilterTypeStats.ALL ? `checked` : ``} type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
         <label for="statistic-all-time" class="statistic__filters-label">All time</label>
 
-        <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
+        <input ${activeFilter === FilterTypeStats.TODAY ? `checked` : ``} type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
         <label for="statistic-today" class="statistic__filters-label">Today</label>
 
-        <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
+        <input ${activeFilter === FilterTypeStats.WEEK ? `checked` : ``} type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
         <label for="statistic-week" class="statistic__filters-label">Week</label>
 
-        <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
+        <input ${activeFilter === FilterTypeStats.MONTH ? `checked` : ``} type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
         <label for="statistic-month" class="statistic__filters-label">Month</label>
 
-        <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
+        <input ${activeFilter === FilterTypeStats.YEAR ? `checked` : ``} type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
         <label for="statistic-year" class="statistic__filters-label">Year</label>
       </form>
 
@@ -144,18 +146,40 @@ const renderStats = (genresFilms) => {
 };
 
 
-export default class Stats extends AbstractSmartComponent {
-  constructor(infoUser) {
+export default class Stats extends AbstractComponent {
+  constructor(infoUser, activeFilterStats, filmsCount) {
     super();
 
     this._infoUser = infoUser;
+    this._activeFilterStats = activeFilterStats;
+    this._filmsCount = filmsCount;
   }
 
   getTemplate() {
-    return createStatsTemplate(this._infoUser);
+    return createStatsTemplate(this._infoUser, this._activeFilterStats, this._filmsCount);
   }
 
   renderStats(genresFilm) {
     renderStats(genresFilm);
+  }
+
+  setAllClickHandler(handler) {
+    this.getElement().querySelector(`#statistic-all-time`).addEventListener(`click`, handler);
+  }
+
+  setTodayClickHandler(handler) {
+    this.getElement().querySelector(`#statistic-today`).addEventListener(`click`, handler);
+  }
+
+  setWeekClickHandler(handler) {
+    this.getElement().querySelector(`#statistic-week`).addEventListener(`click`, handler);
+  }
+
+  setMonthClickHandler(handler) {
+    this.getElement().querySelector(`#statistic-month`).addEventListener(`click`, handler);
+  }
+
+  setYearClickHandler(handler) {
+    this.getElement().querySelector(`#statistic-year`).addEventListener(`click`, handler);
   }
 }

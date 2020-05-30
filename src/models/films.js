@@ -71,6 +71,10 @@ export default class Films {
     return true;
   }
 
+  getFilmsAlreadyWatched() {
+    return this._films.filter((film) => film.userDetails.alreadyWatched);
+  }
+
   setDataChangeHandler(handler) {
     this._dataChangeHandlers.push(handler);
   }
