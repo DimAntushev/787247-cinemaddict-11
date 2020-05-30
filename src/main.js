@@ -10,7 +10,7 @@ import StatsController from './controllers/stats.js';
 
 import {generateFilms} from './mocks/film-card.js';
 
-const FILMS_NUMBER_IN_MAIN_LIST = 15;
+const FILMS_NUMBER_IN_MAIN_LIST = 100;
 
 const mainHeader = document.querySelector(`.header`);
 const mainBlock = document.querySelector(`.main`);

@@ -1,24 +1,33 @@
-import {render} from './../utils/render.js';
+import {render, replace} from './../utils/render.js';
 import StatsComponent from './../components/stats.js';
-import {getGenresAndCount} from './../utils/stats.js';
+import {getGenresAndCount, getUserInfo} from './../utils/stats.js';
 
 
 export default class StatsController {
   constructor(container, filmsModel) {
     this._container = container;
     this._filmsModel = filmsModel;
+    this._films = null;
+    this._genresOfFilms = null;
 
     this._statsComponent = null;
   }
 
   render() {
-    const genresOfFilms = getGenresAndCount(this._filmsModel.getFilmsAll());
+    this._films = this._filmsModel.getFilmsAll();
+    this._genresOfFilms = getGenresAndCount(this._films);
+    const userInfo = getUserInfo(this._films, this._genresOfFilms);
 
-
-    this._statsComponent = new StatsComponent(this._filmsModel);
+    const oldStatsComponent = this._statsComponent;
+    this._statsComponent = new StatsComponent(userInfo);
     render(this._container, this._statsComponent);
+    this._statsComponent.renderStats(this._genresOfFilms);
 
-    this._statsComponent.renderStats(genresOfFilms);
+    if (oldStatsComponent) {
+      replace(this._statsComponent, oldStatsComponent);
+    } else {
+      render(this._container, this._statsComponent);
+    }
   }
 
   show() {

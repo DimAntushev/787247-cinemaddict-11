@@ -23,7 +23,13 @@ const getCountGenres = (genresFilms) => {
   return genreCount;
 };
 
-const createStatsTemplate = (data) => {
+const createStatsTemplate = (userInfo) => {
+
+  const {alreadyWatched, totalDuration, topGenre} = userInfo;
+
+  const hoursTotalDuration = moment(totalDuration).format(`hh`);
+  const minutesTotalDuration = moment(totalDuration).format(`mm`);
+
   return (
     `<section class="statistic">
       <p class="statistic__rank">
@@ -54,15 +60,15 @@ const createStatsTemplate = (data) => {
       <ul class="statistic__text-list">
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">You watched</h4>
-          <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
+          <p class="statistic__item-text">${alreadyWatched} <span class="statistic__item-description">movies</span></p>
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Total duration</h4>
-          <p class="statistic__item-text">130 <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+          <p class="statistic__item-text">${hoursTotalDuration}<span class="statistic__item-description">h</span> ${minutesTotalDuration} <span class="statistic__item-description">m</span></p>
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Top genre</h4>
-          <p class="statistic__item-text">Sci-Fi</p>
+          <p class="statistic__item-text">${topGenre}</p>
         </li>
       </ul>
 
@@ -139,14 +145,14 @@ const renderStats = (genresFilms) => {
 
 
 export default class Stats extends AbstractSmartComponent {
-  constructor(filmsModel) {
+  constructor(infoUser) {
     super();
 
-    this._films = filmsModel.getFilms();
+    this._infoUser = infoUser;
   }
 
   getTemplate() {
-    return createStatsTemplate(this._films);
+    return createStatsTemplate(this._infoUser);
   }
 
   renderStats(genresFilm) {
