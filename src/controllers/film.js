@@ -2,7 +2,9 @@ import {Keys} from './../utils/common.js';
 import {remove, render, replace, RenderPosition} from './../utils/render.js';
 import FilmCardComponent from './../components/film-card.js';
 import PopupDetailFilmComponent from './../components/popup-detail-film.js';
-import FilmModel from './../models/film.js';
+import FilmModel from '../models/film-adapter.js';
+import CommentAdapter from '../models/comment-adapter.js';
+import {api} from '../main.js';
 import {encode} from 'he';
 
 const Mode = {
@@ -15,6 +17,7 @@ export default class FilmController {
     this._container = container;
     this._mode = null;
     this._film = null;
+    this._comments = null;
     this._commentsBlock = null;
     this._filmsModel = filmsModel;
     this._commentsField = null;
@@ -23,7 +26,7 @@ export default class FilmController {
     this._onViewChange = onViewChange;
     this._onCommentChange = onCommentChange;
 
-    this._onEnterDown = this._onEnterDown.bind(this);
+    // this._onEnterDown = this._onEnterDown.bind(this);
 
     this._filmCardComponent = null;
     this._popupDetailFilmComponent = null;
@@ -31,130 +34,157 @@ export default class FilmController {
 
   render(film) {
     this._film = film;
-    const comments = this._api
 
     const oldFilmCardComponent = this._filmCardComponent;
     const oldPopupDetailFilmComponent = this._popupDetailFilmComponent;
 
-    this._mainFooter = document.querySelector(`.footer`);
-    this._filmCardComponent = new FilmCardComponent(this._film);
-    this._popupDetailFilmComponent = new PopupDetailFilmComponent(this._film);
+    api.getComments(this._film.id)
+      .then((comments) => {
+        // commentsModel.setComment(this._film.id, comments);
+        // console.log(commentsModel.getComments());
 
-    const addListenerOpenOnElementsFilmCard = () => {
-      this._filmCardComponent.setTitleClickHandler(onTitleFilmClick);
-      this._filmCardComponent.setPosterClickHandler(onPosterFilmClick);
-      this._filmCardComponent.setCommentsClickHandler(onCommentsFilmClick);
+        const onEnterDown = (evt) => {
+          if (evt.key === Keys.ENTER) {
+            const idFilm = Number(this._popupDetailFilmComponent.getElement().dataset.idFilm);
+            let newComment = this._generateComment();
+            newComment = new CommentAdapter(newComment);
+            newComment.toRAW();
 
-      document.removeEventListener(`keydown`, this._onEnterDown);
-      document.removeEventListener(`keydown`, onEscapeClosePopupDown);
-    };
+            api.addComment(idFilm, newComment)
+              .then(() => {
+                this.render(this._film);
+              });
 
-    const addListenerCloseOnElementsFilmCard = () => {
-      this._popupDetailFilmComponent.setCloseClickHandler(onButtonClosePopupFilmDetail);
-      document.addEventListener(`keydown`, this._onEnterDown);
-      document.addEventListener(`keydown`, onEscapeClosePopupDown);
-    };
+            this._popupDetailFilmComponent.rerender();
+          }
+        };
 
-    const onTitleFilmClick = () => {
-      this._showPopupFilm();
+        this._filmCardComponent = new FilmCardComponent(this._film, comments);
+        this._popupDetailFilmComponent = new PopupDetailFilmComponent(this._film, comments);
 
-      addListenerCloseOnElementsFilmCard();
+        this._mainFooter = document.querySelector(`.footer`);
 
-      this._filmCardComponent.removeTitleClickHandler(onPosterFilmClick);
-      this._filmCardComponent.removePosterClickHandler(onCommentsFilmClick);
-    };
+        const addListenerOpenOnElementsFilmCard = () => {
+          this._filmCardComponent.setTitleClickHandler(onTitleFilmClick);
+          this._filmCardComponent.setPosterClickHandler(onPosterFilmClick);
+          this._filmCardComponent.setCommentsClickHandler(onCommentsFilmClick);
 
-    const onPosterFilmClick = () => {
-      this._showPopupFilm();
+          document.removeEventListener(`keydown`, onEnterDown);
+          document.removeEventListener(`keydown`, onEscapeClosePopupDown);
+        };
 
-      addListenerCloseOnElementsFilmCard();
+        const addListenerCloseOnElementsFilmCard = () => {
+          this._popupDetailFilmComponent.setCloseClickHandler(onButtonClosePopupFilmDetail);
+          document.addEventListener(`keydown`, onEnterDown);
+          document.addEventListener(`keydown`, onEscapeClosePopupDown);
+        };
 
-      this._filmCardComponent.removeTitleClickHandler(onTitleFilmClick);
-      this._filmCardComponent.removeCommentsClickHandler(onCommentsFilmClick);
-    };
+        const onTitleFilmClick = () => {
+          this._showPopupFilm();
 
-    const onCommentsFilmClick = () => {
-      this._showPopupFilm();
+          addListenerCloseOnElementsFilmCard();
 
-      addListenerCloseOnElementsFilmCard();
+          this._filmCardComponent.removeTitleClickHandler(onPosterFilmClick);
+          this._filmCardComponent.removePosterClickHandler(onCommentsFilmClick);
+        };
 
-      this._filmCardComponent.removeTitleClickHandler(onTitleFilmClick);
-      this._filmCardComponent.removePosterClickHandler(onPosterFilmClick);
-    };
+        const onPosterFilmClick = () => {
+          this._showPopupFilm();
 
-    const onButtonClosePopupFilmDetail = () => {
-      this._closePopupFilm();
+          addListenerCloseOnElementsFilmCard();
 
-      addListenerOpenOnElementsFilmCard();
+          this._filmCardComponent.removeTitleClickHandler(onTitleFilmClick);
+          this._filmCardComponent.removeCommentsClickHandler(onCommentsFilmClick);
+        };
 
-      this._popupDetailFilmComponent.removeCloseClickHandler(onButtonClosePopupFilmDetail);
-    };
+        const onCommentsFilmClick = () => {
+          this._showPopupFilm();
 
-    const onEscapeClosePopupDown = (evt) => {
-      const isEscape = evt.key === Keys.ESCAPE || evt.key === Keys.ESC;
-      if (isEscape) {
-        this._closePopupFilm();
+          addListenerCloseOnElementsFilmCard();
+
+          this._filmCardComponent.removeTitleClickHandler(onTitleFilmClick);
+          this._filmCardComponent.removePosterClickHandler(onPosterFilmClick);
+        };
+
+        const onButtonClosePopupFilmDetail = () => {
+          this._closePopupFilm();
+
+          addListenerOpenOnElementsFilmCard();
+
+          this._popupDetailFilmComponent.removeCloseClickHandler(onButtonClosePopupFilmDetail);
+        };
+
+        const onEscapeClosePopupDown = (evt) => {
+          const isEscape = evt.key === Keys.ESCAPE || evt.key === Keys.ESC;
+          if (isEscape) {
+            this._closePopupFilm();
+
+            addListenerOpenOnElementsFilmCard();
+          }
+        };
 
         addListenerOpenOnElementsFilmCard();
-      }
-    };
 
-    addListenerOpenOnElementsFilmCard();
+        // Датабиндинг
 
-    // Датабиндинг
+        this._popupDetailFilmComponent.setDeleteClickHandler((idComment) => {
+          api.removeComment(idComment)
+            .then(() => {
+              this.render(this._film);
+            });
+        });
 
-    this._popupDetailFilmComponent.setDeleteClickHandler((idFilm, idComment) => {
-      this._onCommentChange(idFilm, idComment, null);
-    });
+        this._filmCardComponent.setAddToWatchlistClickHandler(() => {
+          const newFilm = FilmModel.clone(this._film);
+          newFilm.userDetails.watchlist = !newFilm.userDetails.watchlist;
 
-    this._filmCardComponent.setAddToWatchlistClickHandler(() => {
-      const newFilm = FilmModel.clone(this._film);
-      newFilm.userDetails.watchlist = !newFilm.userDetails.watchlist;
+          this._onDataChange(this, film.id, newFilm);
+        });
 
-      this._onDataChange(this, film.id, newFilm);
-    });
+        this._filmCardComponent.setAddMarkAsWatchedHandler(() => {
+          const newFilm = FilmModel.clone(this._film);
+          newFilm.userDetails.alreadyWatched = !newFilm.userDetails.alreadyWatched;
 
-    this._filmCardComponent.setAddMarkAsWatchedHandler(() => {
-      const newFilm = FilmModel.clone(this._film);
-      newFilm.userDetails.alreadyWatched = !newFilm.userDetails.alreadyWatched;
+          this._onDataChange(this, film.id, newFilm);
+        });
 
-      this._onDataChange(this, film.id, newFilm);
-    });
+        this._filmCardComponent.setAddFavorite(() => {
+          const newFilm = FilmModel.clone(this._film);
+          newFilm.userDetails.favorite = !newFilm.userDetails.favorite;
 
-    this._filmCardComponent.setAddFavorite(() => {
-      const newFilm = FilmModel.clone(this._film);
-      newFilm.userDetails.favorite = !newFilm.userDetails.favorite;
+          this._onDataChange(this, film.id, newFilm);
+        });
 
-      this._onDataChange(this, film.id, newFilm);
-    });
+        this._popupDetailFilmComponent.setAddToWatchlistClickHandler(() => {
+          const newFilm = FilmModel.clone(this._film);
+          newFilm.userDetails.watchlist = !newFilm.userDetails.watchlist;
 
-    this._popupDetailFilmComponent.setAddToWatchlistClickHandler(() => {
-      const newFilm = FilmModel.clone(this._film);
-      newFilm.userDetails.watchlist = !newFilm.userDetails.watchlist;
+          this._onDataChange(this, film.id, newFilm);
+        });
 
-      this._onDataChange(this, film.id, newFilm);
-    });
+        this._popupDetailFilmComponent.setAddMarkAsWatchedHandler(() => {
+          const newFilm = FilmModel.clone(this._film);
+          newFilm.userDetails.alreadyWatched = !newFilm.userDetails.alreadyWatched;
 
-    this._popupDetailFilmComponent.setAddMarkAsWatchedHandler(() => {
-      const newFilm = FilmModel.clone(this._film);
-      newFilm.userDetails.alreadyWatched = !newFilm.userDetails.alreadyWatched;
+          this._onDataChange(this, film.id, newFilm);
+        });
 
-      this._onDataChange(this, film.id, newFilm);
-    });
+        this._popupDetailFilmComponent.setAddFavoriteHandler(() => {
+          const newFilm = FilmModel.clone(this._film);
+          newFilm.userDetails.favorite = !newFilm.userDetails.favorite;
 
-    this._popupDetailFilmComponent.setAddFavoriteHandler(() => {
-      const newFilm = FilmModel.clone(this._film);
-      newFilm.userDetails.favorite = !newFilm.userDetails.favorite;
+          this._onDataChange(this, film.id, newFilm);
+        });
 
-      this._onDataChange(this, film.id, newFilm);
-    });
+        if (oldFilmCardComponent && oldPopupDetailFilmComponent) {
+          replace(this._filmCardComponent, oldFilmCardComponent);
+          replace(this._popupDetailFilmComponent, oldPopupDetailFilmComponent);
+        } else {
+          render(this._container, this._filmCardComponent);
+        }
+      });
 
-    if (oldFilmCardComponent && oldPopupDetailFilmComponent) {
-      replace(this._filmCardComponent, oldFilmCardComponent);
-      replace(this._popupDetailFilmComponent, oldPopupDetailFilmComponent);
-    } else {
-      render(this._container, this._filmCardComponent);
-    }
+
   }
 
   destroy() {
@@ -173,25 +203,29 @@ export default class FilmController {
     const commentUserNotSanitized = popupElement.querySelector(`.film-details__comment-input`).value;
     const commentUser = encode(commentUserNotSanitized);
     const emotionComment = popupElement.querySelector(`.film-details__add-emoji-label`).dataset.emoji;
-
-    const idComment = this._film.comments.length;
+    const dateNow = new Date();
     return {
-      id: idComment,
       emotion: emotionComment,
       comment: commentUser,
-      author: `Джек Ворбоей`,
-      date: Date.now()
+      date: dateNow.toISOString()
     };
   }
 
-  _onEnterDown(evt) {
-    if (evt.key === Keys.ENTER) {
-      const idFilm = Number(this._popupDetailFilmComponent.getElement().dataset.idFilm);
-      const newComment = this._generateComment();
-      this._onCommentChange(idFilm, null, newComment);
-      this._popupDetailFilmComponent.rerender();
-    }
-  }
+  // _onEnterDown(evt) {
+  //   if (evt.key === Keys.ENTER) {
+  //     const idFilm = Number(this._popupDetailFilmComponent.getElement().dataset.idFilm);
+  //     let newComment = this._generateComment();
+  //     newComment = new CommentAdapter(newComment);
+  //     newComment.toRAW();
+  //
+  //     api.addComment(idFilm, newComment)
+  //       .then(() => {
+  //         this.render(this._film);
+  //       });
+  //
+  //     this._popupDetailFilmComponent.rerender();
+  //   }
+  // }
   _showPopupFilm() {
     this._onViewChange();
     this._mode = Mode.OPEN;

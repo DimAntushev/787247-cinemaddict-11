@@ -83,7 +83,7 @@ const createCommentsTemplate = (comments, emoji) => {
   );
 };
 
-const createPopupDetailFilmTemplate = (film, emoji) => {
+const createPopupDetailFilmTemplate = (film, emoji, comments) => {
   const {filmInfo, userDetails} = film;
 
   const releaseDate = formatDateFilmCardDetails(filmInfo.release.date);
@@ -183,7 +183,7 @@ const createPopupDetailFilmTemplate = (film, emoji) => {
         </div>
 
         <div class="form-details__bottom-container">
-            ${createCommentsTemplate(film.comments, emoji)}
+            ${createCommentsTemplate(comments, emoji)}
         </div>
       </form>
     </section>`
@@ -191,11 +191,12 @@ const createPopupDetailFilmTemplate = (film, emoji) => {
 };
 
 export default class PopupDetailFilm extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(film, comments) {
     super();
 
     this._currentEmoji = null;
     this._film = film;
+    this._comments = comments;
 
     this._setDeleteClickHandler = null;
     this._setCloseClickHandler = null;
@@ -210,7 +211,7 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createPopupDetailFilmTemplate(this._film, this._currentEmoji);
+    return createPopupDetailFilmTemplate(this._film, this._currentEmoji, this._comments);
   }
 
   recoveryListeners() {
@@ -249,9 +250,8 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
       const currentElement = evt.target;
       const isDeleteButton = currentElement.classList.contains(`film-details__comment-delete`);
       if (isDeleteButton) {
-        const idFilm = Number(this.getElement().dataset.idFilm);
         const idComment = Number(evt.target.dataset.idComment);
-        handler(idFilm, idComment);
+        handler(idComment);
       }
 
       this._setDeleteClickHandler = handler;

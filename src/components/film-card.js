@@ -4,7 +4,7 @@ import AbstractComponent from './abstract-component.js';
 const MAX_LENGTH_DESCRIPTION = 140;
 
 const createFilmCardTemplate = (film) => {
-  const {comments, filmInfo, userDetails} = film;
+  const {filmInfo, userDetails, comments} = film;
 
   const releaseDate = formatDateFilmCard(filmInfo.release.date);
   const runtime = formatRuntime(filmInfo.runtime);
@@ -40,14 +40,15 @@ const createFilmCardTemplate = (film) => {
 
 
 export default class FilmCard extends AbstractComponent {
-  constructor(film) {
+  constructor(film, comments) {
     super();
 
     this._film = film;
+    this._comments = comments;
   }
 
   getTemplate() {
-    return createFilmCardTemplate(this._film);
+    return createFilmCardTemplate(this._film, this._comments);
   }
 
   setAddToWatchlistClickHandler(handler) {

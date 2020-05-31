@@ -57,9 +57,9 @@ export default class Films {
   }
 
   removeComment(idFilm, idComment) {
-    const filmFind = this._films.find((film) => film.id === idFilm);
-    const filmIndex = this._films.findIndex((film) => film.id === idFilm);
-    const indexComment = filmFind.comments.findIndex((comment) => comment.id === idComment);
+    const filmFind = this._films.find((film) => Number(film.id) === idFilm);
+    const filmIndex = this._films.findIndex((film) => Number(film.id) === idFilm);
+    const indexComment = filmFind.comments.findIndex((comment) => Number(comment.id) === idComment);
 
     if (indexComment === -1) {
       return false;
