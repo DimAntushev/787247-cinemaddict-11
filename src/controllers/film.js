@@ -2,6 +2,7 @@ import {Keys} from './../utils/common.js';
 import {remove, render, replace, RenderPosition} from './../utils/render.js';
 import FilmCardComponent from './../components/film-card.js';
 import PopupDetailFilmComponent from './../components/popup-detail-film.js';
+import FilmModel from './../models/film.js';
 import {encode} from 'he';
 
 const Mode = {
@@ -30,6 +31,7 @@ export default class FilmController {
 
   render(film) {
     this._film = film;
+    const comments = this._api
 
     const oldFilmCardComponent = this._filmCardComponent;
     const oldPopupDetailFilmComponent = this._popupDetailFilmComponent;
@@ -106,69 +108,45 @@ export default class FilmController {
     });
 
     this._filmCardComponent.setAddToWatchlistClickHandler(() => {
-      this._onDataChange(this, film.id, Object.assign({}, film, {
-        userDetails: {
-          watchlist: !film.userDetails.watchlist,
-          alreadyWatched: film.userDetails.alreadyWatched,
-          favorite: film.userDetails.favorite,
-          watchingDate: film.userDetails.watchingDate
-        }
-      }));
+      const newFilm = FilmModel.clone(this._film);
+      newFilm.userDetails.watchlist = !newFilm.userDetails.watchlist;
+
+      this._onDataChange(this, film.id, newFilm);
     });
 
     this._filmCardComponent.setAddMarkAsWatchedHandler(() => {
-      this._onDataChange(this, film.id, Object.assign({}, film, {
-        userDetails: {
-          watchlist: film.userDetails.watchlist,
-          alreadyWatched: !film.userDetails.alreadyWatched,
-          favorite: film.userDetails.favorite,
-          watchingDate: new Date()
-        }
-      }));
+      const newFilm = FilmModel.clone(this._film);
+      newFilm.userDetails.alreadyWatched = !newFilm.userDetails.alreadyWatched;
+
+      this._onDataChange(this, film.id, newFilm);
     });
 
     this._filmCardComponent.setAddFavorite(() => {
-      this._onDataChange(this, film.id, Object.assign({}, film, {
-        userDetails: {
-          watchlist: film.userDetails.watchlist,
-          alreadyWatched: film.userDetails.alreadyWatched,
-          favorite: !film.userDetails.favorite,
-          watchingDate: film.userDetails.watchingDate
-        }
-      }));
+      const newFilm = FilmModel.clone(this._film);
+      newFilm.userDetails.favorite = !newFilm.userDetails.favorite;
+
+      this._onDataChange(this, film.id, newFilm);
     });
 
     this._popupDetailFilmComponent.setAddToWatchlistClickHandler(() => {
-      this._onDataChange(this, film.id, Object.assign({}, film, {
-        userDetails: {
-          watchlist: !film.userDetails.watchlist,
-          alreadyWatched: film.userDetails.alreadyWatched,
-          favorite: film.userDetails.favorite,
-          watchingDate: film.userDetails.watchingDate
-        }
-      }));
+      const newFilm = FilmModel.clone(this._film);
+      newFilm.userDetails.watchlist = !newFilm.userDetails.watchlist;
+
+      this._onDataChange(this, film.id, newFilm);
     });
 
     this._popupDetailFilmComponent.setAddMarkAsWatchedHandler(() => {
-      this._onDataChange(this, film.id, Object.assign({}, film, {
-        userDetails: {
-          watchlist: film.userDetails.watchlist,
-          alreadyWatched: !film.userDetails.alreadyWatched,
-          favorite: film.userDetails.favorite,
-          watchingDate: new Date()
-        }
-      }));
+      const newFilm = FilmModel.clone(this._film);
+      newFilm.userDetails.alreadyWatched = !newFilm.userDetails.alreadyWatched;
+
+      this._onDataChange(this, film.id, newFilm);
     });
 
     this._popupDetailFilmComponent.setAddFavoriteHandler(() => {
-      this._onDataChange(this, film.id, Object.assign({}, film, {
-        userDetails: {
-          watchlist: film.userDetails.watchlist,
-          alreadyWatched: film.userDetails.alreadyWatched,
-          favorite: !film.userDetails.favorite,
-          watchingDate: film.userDetails.watchingDate
-        }
-      }));
+      const newFilm = FilmModel.clone(this._film);
+      newFilm.userDetails.favorite = !newFilm.userDetails.favorite;
+
+      this._onDataChange(this, film.id, newFilm);
     });
 
     if (oldFilmCardComponent && oldPopupDetailFilmComponent) {

@@ -12,7 +12,7 @@ const createGenreMarkup = (genres) => {
 const createCommentMarkup = (commentUser) => {
   const {id, emotion, date, author, comment: notSanitizedComment} = commentUser;
 
-  const comment = encode(notSanitizedComment);
+  const comment = notSanitizedComment;
   const commentDate = formatDateComment(date);
 
   return (

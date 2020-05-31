@@ -108,13 +108,13 @@ const getFilmsMostCommented = (films, count) => {
 };
 
 export default class Page {
-  constructor(container, filmsModel, commentsModel) {
+  constructor(container, filmsModel, api) {
     this._container = container;
     this._films = null;
     this._filmsModel = filmsModel;
-    this._commentModel = commentsModel;
     this._activeFilter = FilterType.ALL;
     this._startShowCardsLoad = 0;
+    this._api = api;
 
     this._showingFilmControllers = [];
 
@@ -124,8 +124,8 @@ export default class Page {
     this._onCommentChange = this._onCommentChange.bind(this);
     this._onButtonShowMoreClick = this._onButtonShowMoreClick.bind(this);
 
-    this._filmsModel.setDataChangeHandler(this._onDataChange);
-    this._filmsModel.setDataChangeHandler(this._onCommentChange);
+    // this._filmsModel.setDataChangeHandler(this._onDataChange);
+    // this._filmsModel.setDataChangeHandler(this._onCommentChange);
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
 
     this._sortsComponent = new SortsComponent(sorts);
@@ -243,11 +243,16 @@ export default class Page {
   }
 
   _onDataChange(filmController, id, newDataFilm) {
-    const isSuccess = this._filmsModel.updateFilm(id, newDataFilm);
+    this._api.updateFilm(id, newDataFilm)
+      .then((films) => {
+        this._filmsModel.updateFilm(id, films);
 
-    if (isSuccess) {
-      filmController.render(newDataFilm);
-    }
+        const isSuccess = this._filmsModel.updateFilm(id, newDataFilm);
+
+        if (isSuccess) {
+          filmController.render(newDataFilm);
+        }
+      });
   }
 
   _onCommentChange(idFilm, idComment, newComment) {
