@@ -3,6 +3,13 @@ import AbstractSmartComponent from './abstract-smart-component';
 import {formatDateComment} from './../utils/common';
 import {encode} from 'he';
 
+const TEXTAREA_BORDER_RED = `1px #f00 solid`;
+
+const ButtonDeleteText = {
+  DEFAULT: `Delete`,
+  DELETING: `Deleting...`
+};
+
 const createGenreMarkup = (genres) => {
   return genres.map((genre) => {
     return `<span class="film-details__genre">${genre}</span>`;
@@ -232,12 +239,12 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
 
   setDeleteClickHandler(handler) {
     this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, (evt) => {
-      const currentElement = evt.target;
-
-      const isDeleteButton = currentElement.classList.contains(`film-details__comment-delete`);
+      const currentButton = evt.target;
+      const currentList = evt.currentTarget;
+      const isDeleteButton = currentButton.classList.contains(`film-details__comment-delete`);
       if (isDeleteButton) {
         const idComment = Number(evt.target.dataset.idComment);
-        handler(idComment);
+        handler(idComment, currentButton, currentList);
       }
 
       this._setDeleteClickHandler = handler;
@@ -300,17 +307,31 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
     }
   }
 
-  activateForm() {
+  errorForm() {
     const formFilm = this.getElement().querySelector(`.film-details__inner`);
     formFilm.disabled = true;
     formFilm.classList.add(`shake`);
-    formFilm.querySelector(`.film-details__comment-input`).style.border = `1px #F00 solid`;
+    formFilm.querySelector(`.film-details__comment-input`).style.border = TEXTAREA_BORDER_RED;
   }
 
   disabledForm() {
+    const formFilm = this.getElement().querySelector(`.film-details__inner`);
+    formFilm.classList.remove(`shake`);
     const textareaComment = this.getElement().querySelector(`.film-details__comment-input`);
     textareaComment.disabled = true;
     textareaComment.style.border = `none`;
+  }
+
+  disabledButton(button, blockComment) {
+    button.disabled = true;
+    button.textContent = ButtonDeleteText.DELETING;
+    blockComment.classList.remove(`shake`);
+  }
+
+  errorButton(button, blockComment) {
+    button.disabled = false;
+    button.textContent = ButtonDeleteText.DEFAULT;
+    blockComment.classList.add(`shake`);
   }
 
   _subscribeOnEvents() {

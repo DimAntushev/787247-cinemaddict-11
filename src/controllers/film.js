@@ -52,7 +52,7 @@ export default class FilmController {
                 this.render(this._film);
               })
               .catch(() => {
-                this._popupDetailFilmComponent.activateForm();
+                this._popupDetailFilmComponent.errorForm();
               });
 
             this._popupDetailFilmComponent.rerender();
@@ -130,10 +130,14 @@ export default class FilmController {
 
         // Датабиндинг
 
-        this._popupDetailFilmComponent.setDeleteClickHandler((idComment) => {
+        this._popupDetailFilmComponent.setDeleteClickHandler((idComment, currentButton, currentList) => {
           api.removeComment(idComment)
             .then(() => {
+              this._popupDetailFilmComponent.disabledButton(currentButton, currentList);
               this.render(this._film);
+            })
+            .catch(() => {
+              this._popupDetailFilmComponent.errorButton(currentButton, currentList);
             });
         });
 
