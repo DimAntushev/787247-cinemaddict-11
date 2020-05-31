@@ -2,7 +2,7 @@ import AbstractSmartComponent from './abstract-component.js';
 
 const filterTemplate = (filter) => {
   return (
-    `<a href="#" data-filter-type="${filter.name}" class="main-navigation__item ${filter.active ? `main-navigation__item--active` : ``}">
+    `<a data-filter-type="${filter.name}" class="main-navigation__item ${filter.active ? `main-navigation__item--active` : ``}" cursor="default">
         ${filter.name}
         <span class="main-navigation__item-count">${filter.count}</span>
     </a>`

@@ -91,7 +91,7 @@ const createPopupDetailFilmTemplate = (film, emoji, comments) => {
 
   return (
     `<section class="film-details" data-id-film=${film.id}>
-      <form class="film-details__inner" id="form" action="#form" method="get">
+      <form class="film-details__inner" method="get">
         <div class="form-details__top-container">
           <div class="film-details__close">
             <button class="film-details__close-btn" type="button">close</button>

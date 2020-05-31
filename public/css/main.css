@@ -222,6 +222,8 @@ button {
   display: flex;
   align-items: flex-start;
   justify-content: center;
+
+  cursor: pointer;
 }
 
 .main-navigation__item {
