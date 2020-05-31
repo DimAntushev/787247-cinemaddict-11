@@ -1,9 +1,10 @@
 import {FilterTypeStats} from './../utils/stats.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import moment from 'moment';
 import {getAchiveUser} from './../utils/common.js';
 import AbstractComponent from './abstract-smart-component.js';
+
+const MINUTES_IN_HOURS = 60;
 
 const getGenres = (genresFilms) => {
   const genres = [];
@@ -28,8 +29,9 @@ const getCountGenres = (genresFilms) => {
 const createStatsTemplate = (userInfo, activeFilter, filmsCount) => {
 
   const {alreadyWatched, totalDuration, topGenre} = userInfo;
-  const hoursTotalDuration = moment(totalDuration).format(`hh`);
-  const minutesTotalDuration = moment(totalDuration).format(`mm`);
+
+  const hoursTotal = Math.floor(totalDuration / MINUTES_IN_HOURS);
+  const minutesTotal = totalDuration % MINUTES_IN_HOURS;
   const achiveUser = getAchiveUser(filmsCount);
 
   return (
@@ -66,7 +68,7 @@ const createStatsTemplate = (userInfo, activeFilter, filmsCount) => {
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Total duration</h4>
-          <p class="statistic__item-text">${hoursTotalDuration}<span class="statistic__item-description">h</span> ${minutesTotalDuration} <span class="statistic__item-description">m</span></p>
+          <p class="statistic__item-text">${hoursTotal > 0 ? hoursTotal : ``}<span class="statistic__item-description">h</span> ${minutesTotal > 0 ? minutesTotal : ``} <span class="statistic__item-description">m</span></p>
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Top genre</h4>

@@ -26,8 +26,6 @@ export default class FilmController {
     this._onViewChange = onViewChange;
     this._onCommentChange = onCommentChange;
 
-    // this._onEnterDown = this._onEnterDown.bind(this);
-
     this._filmCardComponent = null;
     this._popupDetailFilmComponent = null;
   }
@@ -40,9 +38,6 @@ export default class FilmController {
 
     api.getComments(this._film.id)
       .then((comments) => {
-        // commentsModel.setComment(this._film.id, comments);
-        // console.log(commentsModel.getComments());
-
         const onEnterDown = (evt) => {
           if (evt.key === Keys.ENTER) {
             const idFilm = Number(this._popupDetailFilmComponent.getElement().dataset.idFilm);
@@ -211,21 +206,6 @@ export default class FilmController {
     };
   }
 
-  // _onEnterDown(evt) {
-  //   if (evt.key === Keys.ENTER) {
-  //     const idFilm = Number(this._popupDetailFilmComponent.getElement().dataset.idFilm);
-  //     let newComment = this._generateComment();
-  //     newComment = new CommentAdapter(newComment);
-  //     newComment.toRAW();
-  //
-  //     api.addComment(idFilm, newComment)
-  //       .then(() => {
-  //         this.render(this._film);
-  //       });
-  //
-  //     this._popupDetailFilmComponent.rerender();
-  //   }
-  // }
   _showPopupFilm() {
     this._onViewChange();
     this._mode = Mode.OPEN;

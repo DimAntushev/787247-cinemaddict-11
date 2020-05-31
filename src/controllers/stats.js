@@ -7,8 +7,8 @@ export default class StatsController {
   constructor(container, filmsModel) {
     this._container = container;
     this._filmsModel = filmsModel;
-    this._films = this._filmsModel.getWatchedFilms();
-    this._filmsCount = this._films.length;
+
+
     this._genresOfFilms = null;
     this._userInfo = null;
 
@@ -16,6 +16,9 @@ export default class StatsController {
   }
 
   render(films) {
+    this._films = this._filmsModel.getWatchedFilms();
+    this._filmsCount = this._films.length;
+
     this._filmsStats = films;
     this._genresOfFilms = getGenresAndCount(this._filmsStats);
     this._userInfo = getUserInfo(this._filmsStats, this._genresOfFilms);

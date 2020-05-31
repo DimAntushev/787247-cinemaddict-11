@@ -1,7 +1,11 @@
 import FilmAdapter from './models/film-adapter.js';
 import CommentAdapter from './models/comment-adapter.js';
 
-const Method = {
+const RESPONSE_STATUS_MIN = 200;
+const RESPONSE_STATUS_MAX = 300;
+
+
+const Methods = {
   GET: `GET`,
   POST: `POST`,
   PUT: `PUT`,
@@ -9,7 +13,7 @@ const Method = {
 };
 
 const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300) {
+  if (response.status >= RESPONSE_STATUS_MIN && response.status < RESPONSE_STATUS_MAX) {
     return response;
   } else {
     throw Error(`${response.status}: ${response.statusText}`);
@@ -30,7 +34,7 @@ export default class API {
 
   updateFilm(id, data) {
     return this._load({
-      method: Method.PUT,
+      method: Methods.PUT,
       url: `movies/${id}`,
       headers: new Headers({"Content-Type": `application/json`}),
       body: JSON.stringify(data.toRAW())
@@ -49,14 +53,14 @@ export default class API {
 
   removeComment(idComment) {
     return this._load({
-      method: `DELETE`,
+      method: Methods.DELETE,
       url: `comments/${idComment}`
     });
   }
 
   addComment(idFilm, newComment) {
     return this._load({
-      method: Method.POST,
+      method: Methods.POST,
       url: `comments/${idFilm}`,
       headers: new Headers({"Content-Type": `application/json`}),
       body: JSON.stringify(newComment.toRAW())
@@ -66,7 +70,7 @@ export default class API {
   }
 
 
-  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
+  _load({url, method = Methods.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})

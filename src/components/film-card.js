@@ -1,4 +1,4 @@
-import {formatDateFilmCard, formatRuntime} from './../utils/common.js';
+import {formatDateFilmCard, formatRuntimeInMinutes} from './../utils/common.js';
 import AbstractComponent from './abstract-component.js';
 
 const MAX_LENGTH_DESCRIPTION = 140;
@@ -7,7 +7,7 @@ const createFilmCardTemplate = (film) => {
   const {filmInfo, userDetails, comments} = film;
 
   const releaseDate = formatDateFilmCard(filmInfo.release.date);
-  const runtime = formatRuntime(filmInfo.runtime);
+  const runtime = formatRuntimeInMinutes(filmInfo.runtime);
   const description = filmInfo.description.length > 140 ?
     filmInfo.description.slice(0, MAX_LENGTH_DESCRIPTION) + `...` : filmInfo.description;
 

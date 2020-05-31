@@ -1,4 +1,4 @@
-import {formatDateFilmCardDetails, formatRuntime} from './../utils/common.js';
+import {formatDateFilmCardDetails, formatRuntimeInMinutes} from './../utils/common.js';
 import AbstractSmartComponent from './abstract-smart-component';
 import {formatDateComment} from './../utils/common';
 import {encode} from 'he';
@@ -87,11 +87,11 @@ const createPopupDetailFilmTemplate = (film, emoji, comments) => {
   const {filmInfo, userDetails} = film;
 
   const releaseDate = formatDateFilmCardDetails(filmInfo.release.date);
-  const runtime = formatRuntime(filmInfo.runtime);
+  const runtime = formatRuntimeInMinutes(filmInfo.runtime);
 
   return (
     `<section class="film-details" data-id-film=${film.id}>
-      <form class="film-details__inner" action="" method="get">
+      <form class="film-details__inner" id="form" action="#form" method="get">
         <div class="form-details__top-container">
           <div class="film-details__close">
             <button class="film-details__close-btn" type="button">close</button>
@@ -143,7 +143,7 @@ const createPopupDetailFilmTemplate = (film, emoji, comments) => {
                   <td class="film-details__cell">${filmInfo.release.releaseCountry}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">Genres</td>
+                  <td class="film-details__term">${filmInfo.genre.length > 1 ? `Genres` : `Genre`}</td>
                   <td class="film-details__cell">
                     ${createGenreMarkup(filmInfo.genre)}
                 </tr>
@@ -182,7 +182,7 @@ const createPopupDetailFilmTemplate = (film, emoji, comments) => {
           </section>
         </div>
 
-        <div class="form-details__bottom-container">
+        <div class="form-details__bottom-container" id="comments">
             ${createCommentsTemplate(comments, emoji)}
         </div>
       </form>

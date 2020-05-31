@@ -1,17 +1,22 @@
-const GENRES = [
-  `Drama`,
-  `Western`,
-  `Thriller`,
-  `Comedy`,
-  `Adventure`
-];
-
 const FilterTypeStats = {
   ALL_TIME: `all time`,
   TODAY: `today`,
   WEEK: `week`,
   MONTH: `month`,
   YEAR: `year`
+};
+
+const getAllGenres = (films) => {
+  const genres = [];
+  films.forEach((film) => {
+    film.filmInfo.genre.forEach((genre) => {
+      if (!genres.includes(genre)) {
+        genres.push(genre);
+      }
+    });
+  });
+
+  return genres;
 };
 
 const searchGenreOfFilm = (film, genre) => {
@@ -35,7 +40,8 @@ const getCountFilmsOfGenre = (genre, films) => {
 };
 
 const getGenresAndCount = (films) => {
-  return GENRES.map((genreFilm) => {
+  const genres = getAllGenres(films);
+  return genres.map((genreFilm) => {
     return {
       genre: genreFilm,
       countFilms: getCountFilmsOfGenre(genreFilm, films)
@@ -73,4 +79,4 @@ const getUserInfo = (films, genres) => {
   };
 };
 
-export {GENRES, FilterTypeStats, getGenresAndCount, getUserInfo};
+export {FilterTypeStats, getGenresAndCount, getUserInfo, getAllGenres};

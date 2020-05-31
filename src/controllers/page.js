@@ -124,7 +124,6 @@ export default class Page {
     this._onCommentChange = this._onCommentChange.bind(this);
     this._onButtonShowMoreClick = this._onButtonShowMoreClick.bind(this);
 
-    // this._filmsModel.setDataChangeHandler(this._onDataChange);
     this._filmsModel.setDataChangeHandler(this._onCommentChange);
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
 
