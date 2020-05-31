@@ -1,7 +1,5 @@
 import moment from 'moment';
 
-const MIN_IN_HOURS = 60;
-
 const Keys = {
   ESC: `Esc`,
   ESCAPE: `Escape`,
