@@ -39,7 +39,8 @@ export default class FilmController {
     api.getComments(this._film.id)
       .then((comments) => {
         const onEnterDown = (evt) => {
-          if (evt.key === Keys.ENTER) {
+          const isKeysDown = (evt.ctrlKey || evt.meta) && evt.key === Keys.ENTER;
+          if (isKeysDown) {
             const idFilm = Number(this._popupDetailFilmComponent.getElement().dataset.idFilm);
             let newComment = this._generateComment();
             newComment = new CommentAdapter(newComment);
@@ -47,7 +48,11 @@ export default class FilmController {
 
             api.addComment(idFilm, newComment)
               .then(() => {
+                this._popupDetailFilmComponent.disabledForm();
                 this.render(this._film);
+              })
+              .catch(() => {
+                this._popupDetailFilmComponent.activateForm();
               });
 
             this._popupDetailFilmComponent.rerender();
@@ -63,6 +68,9 @@ export default class FilmController {
           this._filmCardComponent.setTitleClickHandler(onTitleFilmClick);
           this._filmCardComponent.setPosterClickHandler(onPosterFilmClick);
           this._filmCardComponent.setCommentsClickHandler(onCommentsFilmClick);
+          if (oldPopupDetailFilmComponent) {
+            this._popupDetailFilmComponent.setCloseClickHandler(onButtonClosePopupFilmDetail);
+          }
 
           document.removeEventListener(`keydown`, onEnterDown);
           document.removeEventListener(`keydown`, onEscapeClosePopupDown);

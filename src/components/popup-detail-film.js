@@ -230,24 +230,10 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
     super.rerender();
   }
 
-  _subscribeOnEvents() {
-    const element = this.getElement();
-
-    element.querySelector(`.film-details__emoji-list`).addEventListener(`click`, (evt) => {
-      const hideInputEmoji = this.getElement()
-        .querySelector(`.film-details__emoji-item[name="comment-emoji"]`);
-      if (evt.target.tagName === `INPUT`) {
-        this._currentEmoji = evt.target.id.replace(`emoji-`, ``);
-        hideInputEmoji.value = evt.target.value;
-
-        this.rerender();
-      }
-    });
-  }
-
   setDeleteClickHandler(handler) {
     this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, (evt) => {
       const currentElement = evt.target;
+
       const isDeleteButton = currentElement.classList.contains(`film-details__comment-delete`);
       if (isDeleteButton) {
         const idComment = Number(evt.target.dataset.idComment);
@@ -312,5 +298,33 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
     if (emoji) {
       emoji.remove();
     }
+  }
+
+  activateForm() {
+    const formFilm = this.getElement().querySelector(`.film-details__inner`);
+    formFilm.disabled = true;
+    formFilm.classList.add(`shake`);
+    formFilm.querySelector(`.film-details__comment-input`).style.border = `1px #F00 solid`;
+  }
+
+  disabledForm() {
+    const textareaComment = this.getElement().querySelector(`.film-details__comment-input`);
+    textareaComment.disabled = true;
+    textareaComment.style.border = `none`;
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.film-details__emoji-list`).addEventListener(`click`, (evt) => {
+      const hideInputEmoji = this.getElement()
+        .querySelector(`.film-details__emoji-item[name="comment-emoji"]`);
+      if (evt.target.tagName === `INPUT`) {
+        this._currentEmoji = evt.target.id.replace(`emoji-`, ``);
+        hideInputEmoji.value = evt.target.value;
+
+        this.rerender();
+      }
+    });
   }
 }
