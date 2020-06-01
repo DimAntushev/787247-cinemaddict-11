@@ -107,7 +107,7 @@ const createPopupDetailFilmTemplate = (film, emoji, comments) => {
             <div class="film-details__poster">
               <img class="film-details__poster-img" src="${filmInfo.poster}" alt="">
 
-              <p class="film-details__age">${filmInfo.ageRating}</p>
+              <p class="film-details__age">${filmInfo.ageRating}+</p>
             </div>
 
             <div class="film-details__info">

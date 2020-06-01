@@ -12,7 +12,7 @@ const formatDateFilmCard = (date) => {
 };
 
 const formatDateComment = (date) => {
-  return moment(date).format(`YYYY/MM/DD hh:mm`);
+  return moment(date).fromNow();
 };
 
 const getTodayFilms = (films) => {

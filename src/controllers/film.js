@@ -4,7 +4,7 @@ import FilmCardComponent from './../components/film-card.js';
 import PopupDetailFilmComponent from './../components/popup-detail-film.js';
 import FilmModel from '../models/film-adapter.js';
 import CommentAdapter from '../models/comment-adapter.js';
-import {api} from '../main.js';
+import {apiWithProvider} from '../main.js';
 import {encode} from 'he';
 
 const Mode = {
@@ -33,11 +33,16 @@ export default class FilmController {
   render(film) {
     this._film = film;
 
-    const oldFilmCardComponent = this._filmCardComponent;
-    const oldPopupDetailFilmComponent = this._popupDetailFilmComponent;
-
-    api.getComments(this._film.id)
+    apiWithProvider.getComments(this._film.id)
       .then((comments) => {
+        const oldFilmCardComponent = this._filmCardComponent;
+        const oldPopupDetailFilmComponent = this._popupDetailFilmComponent;
+
+        this._filmCardComponent = new FilmCardComponent(this._film, comments);
+        this._popupDetailFilmComponent = new PopupDetailFilmComponent(this._film, comments);
+
+        this._mainFooter = document.querySelector(`.footer`);
+
         const onEnterDown = (evt) => {
           const isKeysDown = (evt.ctrlKey || evt.meta) && evt.key === Keys.ENTER;
           if (isKeysDown) {
@@ -46,7 +51,7 @@ export default class FilmController {
             newComment = new CommentAdapter(newComment);
             newComment.toRAW();
 
-            api.addComment(idFilm, newComment)
+            apiWithProvider.addComment(idFilm, newComment)
               .then(() => {
                 this._popupDetailFilmComponent.disabledForm();
                 this.render(this._film);
@@ -58,11 +63,6 @@ export default class FilmController {
             this._popupDetailFilmComponent.rerender();
           }
         };
-
-        this._filmCardComponent = new FilmCardComponent(this._film, comments);
-        this._popupDetailFilmComponent = new PopupDetailFilmComponent(this._film, comments);
-
-        this._mainFooter = document.querySelector(`.footer`);
 
         const addListenerOpenOnElementsFilmCard = () => {
           this._filmCardComponent.setTitleClickHandler(onTitleFilmClick);
@@ -131,7 +131,7 @@ export default class FilmController {
         // Датабиндинг
 
         this._popupDetailFilmComponent.setDeleteClickHandler((idComment, currentButton, currentList) => {
-          api.removeComment(idComment)
+          apiWithProvider.removeComment(idComment)
             .then(() => {
               this._popupDetailFilmComponent.disabledButton(currentButton, currentList);
               this.render(this._film);
@@ -190,8 +190,6 @@ export default class FilmController {
           render(this._container, this._filmCardComponent);
         }
       });
-
-
   }
 
   destroy() {

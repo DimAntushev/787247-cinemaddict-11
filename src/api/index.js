@@ -1,5 +1,5 @@
-import FilmAdapter from './models/film-adapter.js';
-import CommentAdapter from './models/comment-adapter.js';
+import FilmAdapter from '../models/film-adapter.js';
+import CommentAdapter from '../models/comment-adapter.js';
 
 const RESPONSE_STATUS_MIN = 200;
 const RESPONSE_STATUS_MAX = 300;
@@ -20,7 +20,7 @@ const checkStatus = (response) => {
   }
 };
 
-export default class API {
+export default class Index {
   constructor(authorization, endPoint) {
     this._authorization = authorization;
     this._endPoint = endPoint;
@@ -32,12 +32,12 @@ export default class API {
       .then(FilmAdapter.parseFilms);
   }
 
-  updateFilm(id, data) {
+  updateFilm(id, film) {
     return this._load({
       method: Methods.PUT,
       url: `movies/${id}`,
       headers: new Headers({"Content-Type": `application/json`}),
-      body: JSON.stringify(data.toRAW())
+      body: JSON.stringify(film.toRAW())
     })
       .then((response) => response.json())
       .then(FilmAdapter.parseFilm);
@@ -67,6 +67,16 @@ export default class API {
     })
       .then((response) => response.json())
       .then(CommentAdapter.parseCommentOfAdd);
+  }
+
+  sync(films) {
+    return this._load({
+      method: Methods.POST,
+      url: `movies/sync`,
+      body: JSON.stringify(films),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then((response) => response.json());
   }
 
 
