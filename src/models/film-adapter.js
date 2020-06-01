@@ -59,6 +59,7 @@ export default class FilmAdapter {
   }
 
   static parseFilm(film) {
+    // console.log(film);
     return new FilmAdapter(film);
   }
 

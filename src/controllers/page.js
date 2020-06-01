@@ -76,6 +76,7 @@ const renderMostCommentFilmsBlock = (mainBlockFilmsComponent, filmsMostCommentCo
 const renderFilmCards = (filmCards, filmsList, onDataChange, onViewChange, onCommentChange, filmsModel) => {
   return filmCards.map((film) => {
     const filmController = new FilmController(filmsList, onDataChange, onViewChange, onCommentChange, filmsModel);
+
     filmController.render(film);
     return filmController;
   });
@@ -189,7 +190,6 @@ export default class Page {
     }
 
     this._startShowCardsLoad += FILMS_NUMBER_COUNT;
-
   }
 
   show() {

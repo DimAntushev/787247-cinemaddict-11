@@ -1,9 +1,12 @@
 import {Keys} from './../utils/common.js';
 import {remove, render, replace, RenderPosition} from './../utils/render.js';
+
 import FilmCardComponent from './../components/film-card.js';
 import PopupDetailFilmComponent from './../components/popup-detail-film.js';
+
 import FilmModel from '../models/film-adapter.js';
 import CommentAdapter from '../models/comment-adapter.js';
+
 import {apiWithProvider} from '../main.js';
 import {encode} from 'he';
 
@@ -12,19 +15,18 @@ const Mode = {
   CLOSE: `close`
 };
 
+const onLine = () => {
+  return window.navigator.onLine;
+};
+
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange, onCommentChange, filmsModel) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._mode = null;
     this._film = null;
-    this._comments = null;
-    this._commentsBlock = null;
-    this._filmsModel = filmsModel;
-    this._commentsField = null;
 
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
-    this._onCommentChange = onCommentChange;
 
     this._filmCardComponent = null;
     this._popupDetailFilmComponent = null;
