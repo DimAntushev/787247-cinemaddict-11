@@ -20,8 +20,8 @@ const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 
 const api = new API(AUTHORIZATION_TOKEN, END_POINT);
-const store = new Store(STORE_NAME, window.localStorage);
-const apiWithProvider = new Provider(api, store);
+// const store = new Store(STORE_NAME, window.localStorage);
+// const apiWithProvider = new Provider(api, store);
 const filmsModel = new FilmsModel();
 
 const mainHeader = document.querySelector(`.header`);
@@ -39,7 +39,7 @@ const filtersController = new FiltersController(mainBlock, filmsModel);
 const statsController = new StatsController(mainBlock, filmsModel);
 
 const init = () => {
-  apiWithProvider.getFilms()
+  api.getFilms()
     .then((films) => {
       const filmsCount = films.filter((film) => film.userDetails.alreadyWatched).length;
       renderHeader(mainHeader, filmsCount);
@@ -53,25 +53,25 @@ const init = () => {
     });
 };
 
-window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`)
-    .then(() => {
-      console.log(`ServiceWorker зарегестрирован`);
-    }).catch(() => {
-      console.log(`ServiceWorker не зарегестрирвоан`);
-    });
-});
+// init();
 
-window.addEventListener(`online`, () => {
-  document.title = document.title.replace(` [offline]`, ``);
+// window.addEventListener(`load`, () => {
+//   navigator.serviceWorker.register(`/sw.js`)
+//     .then(() => {
+//       console.log(`ServiceWorker зарегестрирован`);
+//     }).catch(() => {
+//       console.log(`ServiceWorker не зарегестрирвоан`);
+//     });
+// });
 
-  apiWithProvider.sync();
-});
+// window.addEventListener(`online`, () => {
+//   document.title = document.title.replace(` [offline]`, ``);
+//
+//   // apiWithProvider.sync();
+// });
+//
+// window.addEventListener(`offline`, () => {
+//   document.title += ` [offline]`;
+// });
 
-window.addEventListener(`offline`, () => {
-  document.title += ` [offline]`;
-});
-
-init();
-
-export {pageController, statsController, filmsModel, apiWithProvider};
+export {pageController, statsController, filmsModel};
