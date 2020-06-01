@@ -25,7 +25,6 @@ export default class Provider {
 
   getFilms() {
     if (isOnline()) {
-      console.log(`Онлайн`);
       return this._api.getFilms()
         .then((films) => {
           const filmsStructure = createStoreStructure(films.map((film) => film.toRAW()));
