@@ -1,14 +1,10 @@
 import moment from 'moment';
 
-const DAY_OF_WEEK = 7;
-const DAY_OF_MONTH = 30;
-const DAY_OF_YEAR = 365;
-
 const Keys = {
   ESC: `Esc`,
   ESCAPE: `Escape`,
   ENTER: `Enter`,
-  CTRL_LEFT: `ControlLeft`
+  CTRL: `Control`
 };
 
 const formatDateFilmCard = (date) => {
@@ -16,47 +12,41 @@ const formatDateFilmCard = (date) => {
 };
 
 const formatDateComment = (date) => {
-  return moment(date).format(`YYYY/MM/DD hh:mm`);
+  return moment(date).fromNow();
 };
 
 const getTodayFilms = (films) => {
-  const dateNow = new Date();
-
   return films.filter((film) => {
-    return film.userDetails.watchingDate.getDay() === dateNow.getDay();
+    const diffTime = moment().diff(film.userDetails.watchingDate, `days`);
+    return diffTime < 1;
   });
 };
 
 const getFilmsByWeek = (films) => {
-  const date = new Date();
-  date.setDate(date.getDate() - DAY_OF_WEEK);
-
   return films.filter((film) => {
-    return film.userDetails.watchingDate >= date;
+    const diffTime = moment().diff(film.userDetails.watchingDate, `week`);
+    return diffTime < 1;
   });
 };
 
 const getFilmsByMonth = (films) => {
-  const dateNow = new Date();
-  dateNow.setDate(dateNow.getDate() - DAY_OF_MONTH);
-
   return films.filter((film) => {
-    return film.userDetails.watchingDate >= dateNow;
+    const diffTime = moment().diff(film.userDetails.watchingDate, `month`);
+    return diffTime < 1;
   });
 };
 
 const getFilmsByYear = (films) => {
-  const dateNow = new Date();
-  dateNow.setDate(dateNow.getDate() - DAY_OF_YEAR);
-
   return films.filter((film) => {
-    return film.userDetails.watchingDate >= dateNow;
+    const diffTime = moment().diff(film.userDetails.watchingDate, `year`);
+    return diffTime < 1;
   });
 };
 
-const formatRuntime = (date) => {
-  return moment(date).format(`h`) + `h ` + moment(date).format(`mm`) + `m`;
-
+const formatRuntimeInMinutes = (runtime) => {
+  const hourse = moment.duration(runtime, `minutes`).get(`hours`);
+  const minutes = moment.duration(runtime, `minutes`).get(`minutes`);
+  return `${hourse > 0 ? `${hourse}h ` : ``}` + `${minutes}m`;
 };
 
 const formatDateFilmCardDetails = (date) => {
@@ -99,7 +89,7 @@ export {
   getRandomElementFromArray,
   formatDateFilmCard,
   formatDateComment,
-  formatRuntime,
+  formatRuntimeInMinutes,
   formatDateFilmCardDetails,
   getTodayFilms,
   getFilmsByWeek,

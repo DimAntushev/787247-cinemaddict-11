@@ -11,8 +11,15 @@ export default class Comments {
     return this._comments;
   }
 
-  setComments(comments) {
-    this._comments = comments;
+  getComment(idFilm) {
+    this._comments.find((comments) => comments.idFilmComment === idFilm);
+  }
+
+  setComment(idFilm, comment) {
+    comment = Object.assign({}, comment, {
+      idFilmComment: idFilm
+    });
+    this._comments.push(comment);
   }
 
   addComment(newComment) {

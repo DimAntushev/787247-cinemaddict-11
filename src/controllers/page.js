@@ -1,3 +1,4 @@
+import {apiWithProvider} from './../main.js';
 import {FilterType} from './../const.js';
 import {remove, render} from '../utils/render';
 import NoFilmsComponent from '../components/index-no-data';
@@ -19,12 +20,14 @@ const FILMS_MOST_COMMENTED = 2;
 
 const sortingDateFilms = (films) => {
   return films.slice().sort((filmCurrent, filmNext) => {
-    return filmNext.filmInfo.release.date - filmCurrent.filmInfo.release.date;
+    const filmCurrentDate = new Date(filmCurrent.filmInfo.release.date);
+    const filmNextDate = new Date(filmNext.filmInfo.release.date);
+    return Number(filmNextDate) - Number(filmCurrentDate);
   });
 };
 const sortingRatingFilms = (films) => {
   return films.slice().sort((filmCurrent, filmNext) => {
-    return filmNext.filmInfo.totalRating - filmCurrent.filmInfo.totalRating;
+    return Number(filmNext.filmInfo.totalRating) - Number(filmCurrent.filmInfo.totalRating);
   });
 };
 const sortingFilms = (films, filmsDefault, sortName) => {
@@ -108,11 +111,10 @@ const getFilmsMostCommented = (films, count) => {
 };
 
 export default class Page {
-  constructor(container, filmsModel, commentsModel) {
+  constructor(container, filmsModel) {
     this._container = container;
     this._films = null;
     this._filmsModel = filmsModel;
-    this._commentModel = commentsModel;
     this._activeFilter = FilterType.ALL;
     this._startShowCardsLoad = 0;
 
@@ -124,7 +126,6 @@ export default class Page {
     this._onCommentChange = this._onCommentChange.bind(this);
     this._onButtonShowMoreClick = this._onButtonShowMoreClick.bind(this);
 
-    this._filmsModel.setDataChangeHandler(this._onDataChange);
     this._filmsModel.setDataChangeHandler(this._onCommentChange);
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
 
@@ -210,6 +211,21 @@ export default class Page {
     this._buttonShowMoreComponent.setClickHandler(this._onButtonShowMoreClick);
   }
 
+  _removeFilms() {
+    this._showingFilmControllers.forEach((filmController) => filmController.destroy());
+    this._showingFilmControllers = [];
+  }
+
+  _updateFilms() {
+    this._removeFilms();
+    this._showingFilmControllers = renderFilmCards(
+        this._films.slice(0, FILMS_NUMBER_COUNT),
+        this._filmListMain,
+        this._onDataChange,
+        this._onViewChange
+    );
+  }
+
   _onButtonShowMoreClick() {
     const newFilms = renderMainFilmCards(this._films,
         this._filmListMain,
@@ -227,27 +243,17 @@ export default class Page {
     }
   }
 
-  _removeFilms() {
-    this._showingFilmControllers.forEach((filmController) => filmController.destroy());
-    this._showingFilmControllers = [];
-  }
-
-  _updateFilms() {
-    this._removeFilms();
-    this._showingFilmControllers = renderFilmCards(
-        this._films.slice(0, FILMS_NUMBER_COUNT),
-        this._filmListMain,
-        this._onDataChange,
-        this._onViewChange
-    );
-  }
-
   _onDataChange(filmController, id, newDataFilm) {
-    const isSuccess = this._filmsModel.updateFilm(id, newDataFilm);
+    apiWithProvider.updateFilm(id, newDataFilm)
+      .then((films) => {
+        this._filmsModel.updateFilm(id, films);
 
-    if (isSuccess) {
-      filmController.render(newDataFilm);
-    }
+        const isSuccess = this._filmsModel.updateFilm(id, newDataFilm);
+
+        if (isSuccess) {
+          filmController.render(newDataFilm);
+        }
+      });
   }
 
   _onCommentChange(idFilm, idComment, newComment) {
