@@ -149,18 +149,15 @@ export default class Page {
     render(this._container, this._sortsComponent);
 
     this._sortsComponent.setSortButtonClickHandler((evt) => {
-      if (!evt.target.classList.contains(`sort__button--active`)) {
-        const sortName = evt.target.dataset.sortName;
-        this._films = sortingFilms(this._films, this._filmsDefault, sortName);
-        this._sortsComponent.removeActiveButton();
-        evt.target.classList.add(`sort__button--active`);
-        this._removeFilms();
-        this._startShowCardsLoad = 0;
-        this._showingFilmControllers = renderMainFilmCards(this._films, this._filmListMain, this._startShowCardsLoad,
-            this._onDataChange, this._onViewChange);
-        this._startShowCardsLoad += FILMS_NUMBER_COUNT;
-        this._buttonShowMore();
-      }
+      const sortName = evt.target.dataset.sortName;
+      this._films = sortingFilms(this._films, this._filmsDefault, sortName);
+      this._sortsComponent.removeActiveButton();
+      this._removeFilms();
+      this._startShowCardsLoad = 0;
+      this._showingFilmControllers = renderMainFilmCards(this._films, this._filmListMain, this._startShowCardsLoad,
+          this._onDataChange, this._onViewChange);
+      this._startShowCardsLoad += FILMS_NUMBER_COUNT;
+      this._buttonShowMore();
     });
 
     renderMainBlockForFilms(this._container, this._filmsBlockComponent);
