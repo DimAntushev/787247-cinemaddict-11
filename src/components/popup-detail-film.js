@@ -304,6 +304,14 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
     blockComment.classList.add(ANIMATION_NAME);
   }
 
+  getCurrentEmoji() {
+    return this.getElement().querySelector(`.film-details__add-emoji-label`).dataset.emoji;
+  }
+
+  getCommentText() {
+    return this.getElement().querySelector(`.film-details__comment-input`).value;
+  }
+
   setDeleteClickHandler(handler) {
     this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, (evt) => {
       const currentButton = evt.target;

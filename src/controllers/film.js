@@ -15,6 +15,8 @@ const Mode = {
   CLOSE: `close`
 };
 
+const mainFooter = document.querySelector(`.footer`);
+
 const getComment = (idFilm, comments) => {
   return comments.find((comment) => {
     return comment.idFilmComments === idFilm;
@@ -48,8 +50,6 @@ export default class FilmController {
 
     this._filmCardComponent = new FilmCardComponent(this._film, comments);
     this._popupDetailFilmComponent = new PopupDetailFilmComponent(this._film, comments);
-
-    this._mainFooter = document.querySelector(`.footer`);
 
     this._addListenerOpenOnElementsFilmCard();
 
@@ -137,9 +137,9 @@ export default class FilmController {
 
   _generateComment() {
     const popupElement = this._popupDetailFilmComponent.getElement();
-    const commentUserNotSanitized = popupElement.querySelector(`.film-details__comment-input`).value;
+    const commentUserNotSanitized = popupElement.getCommentText();
     const commentUser = encode(commentUserNotSanitized);
-    const emotionComment = popupElement.querySelector(`.film-details__add-emoji-label`).dataset.emoji;
+    const emotionComment = popupElement.getCurrentEmoji();
     const dateNow = new Date();
     return {
       emotion: emotionComment,
@@ -151,7 +151,7 @@ export default class FilmController {
   _showPopupFilm() {
     this._onViewChange();
     this._mode = Mode.OPEN;
-    render(this._mainFooter, this._popupDetailFilmComponent, RenderPosition.AFTEREND);
+    render(mainFooter, this._popupDetailFilmComponent, RenderPosition.AFTEREND);
   }
 
   _closePopupFilm() {
