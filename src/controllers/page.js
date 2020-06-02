@@ -11,8 +11,8 @@ import SortsComponent from '../components/sorts';
 
 import FilmController from './film.js';
 
-import {sorts} from './../mocks/sorts.js';
-import {SortType} from './../mocks/sorts.js';
+import {sorts} from './../utils/sorts.js';
+import {SortType} from './../utils/sorts.js';
 
 const FILMS_NUMBER_COUNT = 5;
 const FILMS_TOP_RATED = 2;
