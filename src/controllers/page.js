@@ -137,10 +137,9 @@ export default class Page {
     this._filmsMostCommentComponent = new FilmsMostCommentComponent();
     this._buttonShowMoreComponent = new MoreButtonFilmsComponent();
 
-    this._filmListMain = this._filmsAllComponent.getElement().querySelector(`.films-list__container`);
-    this._filmListTop = this._filmsTopComponent.getElement().querySelector(`.films-list__container`);
-    this._filmListMostComment = this._filmsMostCommentComponent.getElement()
-      .querySelector(`.films-list__container`);
+    this._filmListMain = this._filmsAllComponent.getContainer();
+    this._filmListTop = this._filmsTopComponent.getContainer();
+    this._filmListMostComment = this._filmsMostCommentComponent.getElement().getContainer();
   }
 
   render() {
