@@ -9,7 +9,6 @@ export default class Filters {
     this._container = container;
     this._filmsModel = filmsModel;
     this._filters = null;
-    this._activeFilter = FilterType.ALL;
 
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
@@ -53,7 +52,6 @@ export default class Filters {
 
   _onFilterChange(filterType) {
     this._filmsModel.setFilter(filterType);
-    this._activeFilter = filterType;
     this.render();
   }
 

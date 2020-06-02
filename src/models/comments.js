@@ -12,7 +12,7 @@ export default class Comments {
   }
 
   getComment(idFilm) {
-    this._comments.find((comments) => comments.idFilmComment === idFilm);
+    return this._comments.find((comments) => comments.idFilmComment === idFilm);
   }
 
   setComment(idFilm, comment) {

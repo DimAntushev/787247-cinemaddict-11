@@ -44,15 +44,15 @@ const sortingFilms = (films, filmsDefault, sortName) => {
   return films;
 };
 
-const renderMainFilmCards = (filmCards, filmList, startShowCardsLoad, onDataChange, onViewChange, onCommentChange, filmsModel) => {
+const renderMainFilmCards = (filmCards, filmList, startShowCardsLoad, onDataChange, onViewChange) => {
   const filmsCardsLoad = filmCards.slice(startShowCardsLoad, startShowCardsLoad + FILMS_NUMBER_COUNT);
-  return renderFilmCards(filmsCardsLoad, filmList, onDataChange, onViewChange, onCommentChange, filmsModel);
+  return renderFilmCards(filmsCardsLoad, filmList, onDataChange, onViewChange);
 };
-const renderTopFilmCards = (filmCards, filmList, onDataChange, onViewChange, onCommentChange, filmsModel) => {
-  return renderFilmCards(filmCards, filmList, onDataChange, onViewChange, onCommentChange, filmsModel);
+const renderTopFilmCards = (filmCards, filmList, onDataChange, onViewChange) => {
+  return renderFilmCards(filmCards, filmList, onDataChange, onViewChange);
 };
-const renderMostCommentListCards = (filmCards, filmList, onDataChange, onViewChange, onCommentChange, filmsModel) => {
-  return renderFilmCards(filmCards, filmList, onDataChange, onViewChange, onCommentChange, filmsModel);
+const renderMostCommentListCards = (filmCards, filmList, onDataChange, onViewChange) => {
+  return renderFilmCards(filmCards, filmList, onDataChange, onViewChange);
 };
 
 const renderShowMoreButton = (filmListMainComponent, buttonShowMoreComponent) => {
@@ -73,9 +73,9 @@ const renderMostCommentFilmsBlock = (mainBlockFilmsComponent, filmsMostCommentCo
   render(mainBlockFilmsComponent.getElement(), filmsMostCommentComponent);
 };
 
-const renderFilmCards = (filmCards, filmsList, onDataChange, onViewChange, onCommentChange, filmsModel) => {
+const renderFilmCards = (filmCards, filmsList, onDataChange, onViewChange) => {
   return filmCards.map((film) => {
-    const filmController = new FilmController(filmsList, onDataChange, onViewChange, onCommentChange, filmsModel);
+    const filmController = new FilmController(filmsList, onDataChange, onViewChange);
 
     filmController.render(film);
     return filmController;
@@ -158,7 +158,7 @@ export default class Page {
         this._removeFilms();
         this._startShowCardsLoad = 0;
         this._showingFilmControllers = renderMainFilmCards(this._films, this._filmListMain, this._startShowCardsLoad,
-            this._onDataChange, this._onViewChange, this._onCommentChange, this._filmsModel);
+            this._onDataChange, this._onViewChange);
         this._startShowCardsLoad += FILMS_NUMBER_COUNT;
         this._buttonShowMore();
       }
@@ -175,17 +175,16 @@ export default class Page {
 
     renderAllFilmsBlock(this._filmsBlockComponent, this._filmsAllComponent);
     this._showingFilmControllers = renderMainFilmCards(this._films, this._filmListMain, this._startShowCardsLoad,
-        this._onDataChange, this._onViewChange, this._onCommentChange, this._filmsModel);
+        this._onDataChange, this._onViewChange);
 
     if (filmRatedCards) {
       renderTopFilmsBlock(this._filmsBlockComponent, this._filmsTopComponent);
-      renderTopFilmCards(filmRatedCards, this._filmListTop, this._onDataChange, this._onViewChange,
-          this._onCommentChange, this._filmsModel);
+      renderTopFilmCards(filmRatedCards, this._filmListTop, this._onDataChange, this._onViewChange);
     }
     if (filmMostCommentedCards) {
       renderMostCommentFilmsBlock(this._filmsBlockComponent, this._filmsMostCommentComponent);
       renderMostCommentListCards(filmMostCommentedCards, this._filmListMostComment, this._onDataChange,
-          this._onViewChange, this._onCommentChange, this._filmsModel);
+          this._onViewChange);
       this._buttonShowMore();
     }
 
@@ -200,6 +199,18 @@ export default class Page {
   hide() {
     this._filmsBlockComponent.hide();
     this._sortsComponent.hide();
+  }
+
+  disableFormsFilms() {
+    this._showingFilmControllers.forEach((filmController) => {
+      filmController.disabledForm();
+    });
+  }
+
+  activeFormsFilms() {
+    this._showingFilmControllers.forEach((filmController) => {
+      filmController.activeForm();
+    });
   }
 
   _buttonShowMore() {

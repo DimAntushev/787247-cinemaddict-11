@@ -4,7 +4,7 @@ import UserProfileComponent from './components/user-profile.js';
 import TotalNumbersFilmsComponent from './components/total-number-films.js';
 
 import FilmsModel from './models/films.js';
-import CommentModel from './models/comments.js';
+import CommentsModel from './models/comments.js';
 import PageController from './controllers/page.js';
 import FiltersController from './controllers/filters.js';
 import StatsController from './controllers/stats.js';
@@ -28,6 +28,7 @@ const storeFilms = new Store(STORE_FILMS_NAME, window.localStorage);
 const storeComments = new Store(STORE_COMMENTS_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, storeFilms, storeComments);
 const filmsModel = new FilmsModel();
+const commentsModel = new CommentsModel();
 
 const mainHeader = document.querySelector(`.header`);
 const mainBlock = document.querySelector(`.main`);
@@ -51,7 +52,7 @@ const init = () => {
       filtersController.render();
       filmsModel.setFilms(films);
       pageController.render();
-      // pageController.hide();
+      pageController.hide();
       statsController.render(films, filmsModel);
       const footerStatistics = document.querySelector(`.footer__statistics`);
       renderFooter(films.length, footerStatistics);
@@ -71,12 +72,14 @@ window.addEventListener(`load`, () => {
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
+  pageController.activeFormsFilms();
 
   apiWithProvider.sync();
 });
 
 window.addEventListener(`offline`, () => {
   document.title += ` [offline]`;
+  pageController.disableFormsFilms();
 });
 
-export {pageController, statsController, filmsModel, apiWithProvider};
+export {pageController, statsController, filmsModel, commentsModel, apiWithProvider};
