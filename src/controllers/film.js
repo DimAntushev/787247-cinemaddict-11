@@ -252,5 +252,4 @@ export default class FilmController {
 
     this._popupDetailFilmComponent.removeCloseClickHandler(this._onButtonClosePopupFilmDetail);
   }
-
 }
