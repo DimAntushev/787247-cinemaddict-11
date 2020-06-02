@@ -14,5 +14,4 @@ export default class Load extends AbstractComponent {
   getTemplate() {
     return createLoadTemplate();
   }
-};
-
+}
