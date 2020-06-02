@@ -1,7 +1,8 @@
 import {apiWithProvider} from './../main.js';
 import {FilterType} from './../const.js';
-import {remove, render} from '../utils/render';
+import {remove, render, replace, RenderPosition} from '../utils/render';
 import NoFilmsComponent from '../components/index-no-data';
+import LoadComponent from '../components/loading.js';
 import MoreButtonFilmsComponent from '../components/more-button';
 import MainBlockFilmsComponent from '../components/main-block-films';
 import FilmsAllComponent from '../components/films-all';
@@ -17,6 +18,8 @@ import {SortType} from './../mocks/sorts.js';
 const FILMS_NUMBER_COUNT = 5;
 const FILMS_TOP_RATED = 2;
 const FILMS_MOST_COMMENTED = 2;
+
+const loadComponent = new LoadComponent();
 
 const sortingDateFilms = (films) => {
   return films.slice().sort((filmCurrent, filmNext) => {
@@ -264,6 +267,9 @@ export default class Page {
         if (isSuccess) {
           filmController.render(newDataFilm);
         }
+      })
+      .then(() => {
+        remove(this._loadComponent);
       });
   }
 
@@ -282,6 +288,7 @@ export default class Page {
   }
 
   _onFilterChange() {
+    render(this._filmsBlockComponent.getElement(), loadComponent, RenderPosition.AFTERBEGIN);
     this._films = this._filmsModel.getFilms(this._filmsModel.getFilter());
     this._filmsDefault = this._films.slice();
     this._startShowCardsLoad = FILMS_NUMBER_COUNT;
@@ -290,3 +297,5 @@ export default class Page {
     this._buttonShowMore();
   }
 }
+
+export {loadComponent};

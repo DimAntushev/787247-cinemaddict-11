@@ -3,6 +3,7 @@ import {render} from './utils/render.js';
 import UserProfileComponent from './components/user-profile.js';
 import TotalNumbersFilmsComponent from './components/total-number-films.js';
 
+import LoadComponent from './components/loading.js';
 import FilmsModel from './models/films.js';
 import CommentsModel from './models/comments.js';
 import PageController from './controllers/page.js';
@@ -12,6 +13,7 @@ import StatsController from './controllers/stats.js';
 import API from './api/index.js';
 import Store from './api/store.js';
 import Provider from './api/provider.js';
+import {RenderPosition} from "./utils/render";
 
 const AUTHORIZATION_TOKEN = `Basic sdvserverver=`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
@@ -23,6 +25,7 @@ const STORE_COMMENTS_PREFIX = `cinemaddict-localstorage-comments`;
 const STORE_COMMENTS_VER = `v1`;
 const STORE_COMMENTS_NAME = `${STORE_COMMENTS_PREFIX}-${STORE_COMMENTS_VER}`;
 
+const loadComponent = new LoadComponent();
 const api = new API(AUTHORIZATION_TOKEN, END_POINT);
 const storeFilms = new Store(STORE_FILMS_NAME, window.localStorage);
 const storeComments = new Store(STORE_COMMENTS_NAME, window.localStorage);

@@ -3,6 +3,7 @@ import {remove, render, replace, RenderPosition} from './../utils/render.js';
 
 import FilmCardComponent from './../components/film-card.js';
 import PopupDetailFilmComponent from './../components/popup-detail-film.js';
+import {loadComponent} from './page.js';
 
 import FilmAdapter from '../models/film-adapter.js';
 import CommentAdapter from '../models/comment-adapter.js';
@@ -189,6 +190,9 @@ export default class FilmController {
         } else {
           render(this._container, this._filmCardComponent);
         }
+      })
+      .then(() => {
+        remove(loadComponent);
       });
   }
 
