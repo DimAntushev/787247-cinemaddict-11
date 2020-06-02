@@ -50,7 +50,7 @@ export default class Sorts extends AbstractComponent {
     this.getElement().addEventListener(`click`, (evt) => {
       if (!evt.target.classList.contains(`sort__button--active`)) {
         evt.target.classList.add(`sort__button--active`);
-        handler();
+        handler(evt);
       }
     });
   }

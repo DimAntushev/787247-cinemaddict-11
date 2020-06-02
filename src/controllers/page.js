@@ -139,7 +139,7 @@ export default class Page {
 
     this._filmListMain = this._filmsAllComponent.getContainer();
     this._filmListTop = this._filmsTopComponent.getContainer();
-    this._filmListMostComment = this._filmsMostCommentComponent.getElement().getContainer();
+    this._filmListMostComment = this._filmsMostCommentComponent.getContainer();
   }
 
   render() {

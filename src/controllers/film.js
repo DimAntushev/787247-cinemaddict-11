@@ -32,6 +32,16 @@ export default class FilmController {
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
 
+
+    this._addListenerOpenOnElementsFilmCard = this._addListenerOpenOnElementsFilmCard.bind(this);
+    this._addListenerCloseOnElementsFilmCard = this._addListenerCloseOnElementsFilmCard.bind(this);
+    this._onPosterFilmClick = this._onPosterFilmClick.bind(this);
+    this._onTitleFilmClick = this._onTitleFilmClick.bind(this);
+    this._onCommentsFilmClick = this._onCommentsFilmClick.bind(this);
+    this._onEscapeClosePopupDown = this._onEscapeClosePopupDown.bind(this);
+    this._onButtonClosePopupFilmDetail = this._onButtonClosePopupFilmDetail.bind(this);
+    this._onEnterDown = this._onEnterDown.bind(this);
+
     this._filmCardComponent = null;
     this._popupDetailFilmComponent = null;
 
@@ -136,10 +146,9 @@ export default class FilmController {
   }
 
   _generateComment() {
-    const popupElement = this._popupDetailFilmComponent.getElement();
-    const commentUserNotSanitized = popupElement.getCommentText();
+    const commentUserNotSanitized = this._popupDetailFilmComponent.getCommentText();
     const commentUser = encode(commentUserNotSanitized);
-    const emotionComment = popupElement.getCurrentEmoji();
+    const emotionComment = this._popupDetailFilmComponent.getCurrentEmoji();
     const dateNow = new Date();
     return {
       emotion: emotionComment,
@@ -164,12 +173,12 @@ export default class FilmController {
     this._filmCardComponent.setTitleClickHandler(this._onTitleFilmClick);
     this._filmCardComponent.setPosterClickHandler(this._onPosterFilmClick);
     this._filmCardComponent.setCommentsClickHandler(this._onCommentsFilmClick);
-    if (this._oldPopupDetailFilmComponent) {
-      this._popupDetailFilmComponent.setCloseClickHandler(this._onButtonClosePopupFilmDetail);
-    }
 
     document.removeEventListener(`keydown`, this._onEnterDown);
     document.removeEventListener(`keydown`, this._onEscapeClosePopupDown);
+    if (this._oldPopupDetailFilmComponent) {
+      this._addListenerCloseOnElementsFilmCard();
+    }
   }
 
   _addListenerCloseOnElementsFilmCard() {
