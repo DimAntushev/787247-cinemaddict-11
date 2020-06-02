@@ -4,25 +4,31 @@ import UserProfileComponent from './components/user-profile.js';
 import TotalNumbersFilmsComponent from './components/total-number-films.js';
 
 import FilmsModel from './models/films.js';
+import CommentsModel from './models/comments.js';
 import PageController from './controllers/page.js';
 import FiltersController from './controllers/filters.js';
 import StatsController from './controllers/stats.js';
 
-import API from './api';
+import API from './api/index.js';
 import Store from './api/store.js';
 import Provider from './api/provider.js';
 
 const AUTHORIZATION_TOKEN = `Basic sdvserverver=`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
-const STORE_PREFIX = `cinemaddict-localstorage`;
-const STORE_VER = `v1`;
-const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+const STORE_FILMS_PREFIX = `cinemaddict-localstorage-films`;
+const STORE_FILMS_VER = `v1`;
+const STORE_FILMS_NAME = `${STORE_FILMS_PREFIX}-${STORE_FILMS_VER}`;
 
+const STORE_COMMENTS_PREFIX = `cinemaddict-localstorage-comments`;
+const STORE_COMMENTS_VER = `v1`;
+const STORE_COMMENTS_NAME = `${STORE_COMMENTS_PREFIX}-${STORE_COMMENTS_VER}`;
 
 const api = new API(AUTHORIZATION_TOKEN, END_POINT);
-const store = new Store(STORE_NAME, window.localStorage);
-const apiWithProvider = new Provider(api, store);
+const storeFilms = new Store(STORE_FILMS_NAME, window.localStorage);
+const storeComments = new Store(STORE_COMMENTS_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, storeFilms, storeComments);
 const filmsModel = new FilmsModel();
+const commentsModel = new CommentsModel();
 
 const mainHeader = document.querySelector(`.header`);
 const mainBlock = document.querySelector(`.main`);
@@ -53,25 +59,27 @@ const init = () => {
     });
 };
 
+init();
+
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)
     .then(() => {
-      console.log(`ServiceWorker зарегестрирован`);
+
     }).catch(() => {
-      console.log(`ServiceWorker не зарегестрирвоан`);
+
     });
 });
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
+  pageController.activeFormsFilms();
 
   apiWithProvider.sync();
 });
 
 window.addEventListener(`offline`, () => {
   document.title += ` [offline]`;
+  pageController.disableFormsFilms();
 });
 
-init();
-
-export {pageController, statsController, filmsModel, apiWithProvider};
+export {pageController, statsController, filmsModel, commentsModel, apiWithProvider};

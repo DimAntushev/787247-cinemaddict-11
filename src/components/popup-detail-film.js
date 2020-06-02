@@ -237,6 +237,71 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
     super.rerender();
   }
 
+  resetCommentFilter() {
+    const commentsField = this.getElement()
+      .querySelector(`.film-details__comment-input`);
+    const emoji = this.getElement()
+      .querySelector(`.film-details__add-emoji-label img`);
+
+    commentsField.value = ``;
+    if (emoji) {
+      emoji.remove();
+    }
+  }
+
+  activeFormOnline() {
+    const deleteButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+    deleteButtons.forEach((button) => {
+      button.classList.remove(`visually-hidden`);
+    });
+
+    const textareaComment = this.getElement().querySelector(`.film-details__comment-input`);
+    textareaComment.disabled = false;
+
+    const emojiList = this.getElement().querySelector(`.film-details__emoji-list`);
+    emojiList.classList.remove(`visually-hidden`);
+  }
+
+  disabledFormOffline() {
+    const deleteButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+    deleteButtons.forEach((button) => {
+      button.classList.add(`visually-hidden`);
+    });
+
+    const textareaComment = this.getElement().querySelector(`.film-details__comment-input`);
+    textareaComment.disabled = true;
+
+    const emojiList = this.getElement().querySelector(`.film-details__emoji-list`);
+    emojiList.classList.add(`visually-hidden`);
+  }
+
+  disabledForm() {
+    const formFilm = this.getElement().querySelector(`.film-details__inner`);
+    formFilm.classList.remove(`shake`);
+    const textareaComment = this.getElement().querySelector(`.film-details__comment-input`);
+    textareaComment.disabled = true;
+    textareaComment.style.border = `none`;
+  }
+
+  errorForm() {
+    const formFilm = this.getElement().querySelector(`.film-details__inner`);
+    formFilm.disabled = true;
+    formFilm.classList.add(`shake`);
+    formFilm.querySelector(`.film-details__comment-input`).style.border = TEXTAREA_BORDER_RED;
+  }
+
+  disabledButton(button, blockComment) {
+    button.disabled = true;
+    button.textContent = ButtonDeleteText.DELETING;
+    blockComment.classList.remove(`shake`);
+  }
+
+  errorButton(button, blockComment) {
+    button.disabled = false;
+    button.textContent = ButtonDeleteText.DEFAULT;
+    blockComment.classList.add(`shake`);
+  }
+
   setDeleteClickHandler(handler) {
     this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, (evt) => {
       const currentButton = evt.target;
@@ -293,45 +358,6 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
       .addEventListener(`click`, handler);
 
     this._setAddFavoriteHandler = handler;
-  }
-
-  resetCommentFilter() {
-    const commentsField = this.getElement()
-      .querySelector(`.film-details__comment-input`);
-    const emoji = this.getElement()
-      .querySelector(`.film-details__add-emoji-label img`);
-
-    commentsField.value = ``;
-    if (emoji) {
-      emoji.remove();
-    }
-  }
-
-  errorForm() {
-    const formFilm = this.getElement().querySelector(`.film-details__inner`);
-    formFilm.disabled = true;
-    formFilm.classList.add(`shake`);
-    formFilm.querySelector(`.film-details__comment-input`).style.border = TEXTAREA_BORDER_RED;
-  }
-
-  disabledForm() {
-    const formFilm = this.getElement().querySelector(`.film-details__inner`);
-    formFilm.classList.remove(`shake`);
-    const textareaComment = this.getElement().querySelector(`.film-details__comment-input`);
-    textareaComment.disabled = true;
-    textareaComment.style.border = `none`;
-  }
-
-  disabledButton(button, blockComment) {
-    button.disabled = true;
-    button.textContent = ButtonDeleteText.DELETING;
-    blockComment.classList.remove(`shake`);
-  }
-
-  errorButton(button, blockComment) {
-    button.disabled = false;
-    button.textContent = ButtonDeleteText.DEFAULT;
-    blockComment.classList.add(`shake`);
   }
 
   _subscribeOnEvents() {

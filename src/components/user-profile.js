@@ -1,7 +1,6 @@
 import AbstractComponent from './abstract-component.js';
 import {getAchiveUser} from './../utils/common.js';
 
-
 const createUserProfileTemplate = (filmsCount) => {
   const achiveUser = getAchiveUser(filmsCount);
 

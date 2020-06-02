@@ -1,4 +1,5 @@
 import FilmAdapter from '../models/film-adapter.js';
+import CommentAdapter from '../models/comment-adapter.js';
 
 const getSyncedFilms = (films) => {
   return films.filter(({success}) => success)
@@ -13,29 +14,43 @@ const createStoreStructure = (items) => {
   }, {});
 };
 
+const createStoreStructureComment = (idFilm, comments) => {
+  return {
+    id: idFilm,
+    commentsFilm: comments
+  };
+};
+
+const filterLocalComments = (idFilm, comments) => {
+  return comments.find((comment) => {
+    return comment.id === idFilm;
+  });
+};
+
 const isOnline = () => {
   return window.navigator.onLine;
 };
 
 export default class Provider {
-  constructor(api, store) {
+  constructor(api, storeFilms, storeComment) {
     this._api = api;
-    this._store = store;
+    this._storeFilms = storeFilms;
+    this._storeComment = storeComment;
   }
 
   getFilms() {
     if (isOnline()) {
       return this._api.getFilms()
         .then((films) => {
-          const filmsStructure = createStoreStructure(films.map((film) => film.toRAW()));
+          const filmsLocal = createStoreStructure(films.map((film) => film.toRAW()));
 
-          this._store.setItems(filmsStructure);
+          this._storeFilms.setItems(filmsLocal);
 
-          return filmsStructure;
+          return films;
         });
     }
 
-    const storeFilms = Object.values(this._store.getItems());
+    const storeFilms = Object.values(this._storeFilms.getItems());
 
     return Promise.resolve(FilmAdapter.parseFilms(storeFilms));
   }
@@ -44,7 +59,7 @@ export default class Provider {
     if (isOnline()) {
       return this._api.updateFilm(id, film)
         .then((newFilm) => {
-          this._store.setItem(newFilm.id, newFilm.toRAW());
+          this._storeFilms.setItem(newFilm.id, newFilm.toRAW());
 
           return newFilm;
         });
@@ -52,17 +67,29 @@ export default class Provider {
 
     const localFilm = FilmAdapter.clone(Object.assign(film, {id}));
 
-    this._store.setItem(id, localFilm.toRAW());
+    this._storeFilms.setItem(id, localFilm.toRAW());
 
     return Promise.resolve(localFilm);
   }
 
   getComments(idFilm) {
     if (isOnline()) {
-      return this._api.getComments(idFilm);
+      return this._api.getComments(idFilm)
+        .then((comments) => {
+
+          const localStoreComments = createStoreStructureComment(idFilm, comments);
+
+          this._storeComment.setItem(idFilm, localStoreComments);
+
+          return comments;
+        });
     }
 
-    return Promise.reject();
+    const storeComments = Object.values(this._storeComment.getItems());
+
+    const localCommentsFilm = filterLocalComments(idFilm, storeComments);
+
+    return Promise.resolve(CommentAdapter.parseComments(localCommentsFilm.commentsFilm));
   }
 
   removeComment(idFilm) {
@@ -83,16 +110,15 @@ export default class Provider {
 
   sync() {
     if (isOnline()) {
-      const storeFilms = Object.values(this._store.getItems());
+      const storeFilms = Object.values(this._storeFilms.getItems());
 
       return this._api.sync(storeFilms)
         .then((response) => {
-          const createdTasks = getSyncedFilms(response.created);
-          const updatedTasks = getSyncedFilms(response.updated);
+          const updatedFilms = getSyncedFilms(response.updated);
 
-          const items = createStoreStructure([...createdTasks, ...updatedTasks]);
+          const items = createStoreStructure([...updatedFilms]);
 
-          this._store.setItems(items);
+          this._storeFilms.setItems(items);
         });
     }
 

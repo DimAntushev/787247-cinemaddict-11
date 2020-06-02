@@ -68,7 +68,7 @@ const createStatsTemplate = (userInfo, activeFilter, filmsCount) => {
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Total duration</h4>
-          <p class="statistic__item-text">${hoursTotal > 0 ? hoursTotal : ``}<span class="statistic__item-description">h</span> ${minutesTotal > 0 ? minutesTotal : ``} <span class="statistic__item-description">m</span></p>
+          <p class="statistic__item-text">${hoursTotal > 0 ? hoursTotal : `0`}<span class="statistic__item-description">h</span> ${minutesTotal > 0 ? minutesTotal : `0`} <span class="statistic__item-description">m</span></p>
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Top genre</h4>

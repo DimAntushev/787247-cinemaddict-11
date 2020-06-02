@@ -1,10 +1,13 @@
 import {Keys} from './../utils/common.js';
 import {remove, render, replace, RenderPosition} from './../utils/render.js';
+
 import FilmCardComponent from './../components/film-card.js';
 import PopupDetailFilmComponent from './../components/popup-detail-film.js';
-import FilmModel from '../models/film-adapter.js';
+
+import FilmAdapter from '../models/film-adapter.js';
 import CommentAdapter from '../models/comment-adapter.js';
-import {apiWithProvider} from '../main.js';
+
+import {apiWithProvider, commentsModel} from '../main.js';
 import {encode} from 'he';
 
 const Mode = {
@@ -13,18 +16,13 @@ const Mode = {
 };
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange, onCommentChange, filmsModel) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._mode = null;
     this._film = null;
-    this._comments = null;
-    this._commentsBlock = null;
-    this._filmsModel = filmsModel;
-    this._commentsField = null;
 
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
-    this._onCommentChange = onCommentChange;
 
     this._filmCardComponent = null;
     this._popupDetailFilmComponent = null;
@@ -33,7 +31,7 @@ export default class FilmController {
   render(film) {
     this._film = film;
 
-    apiWithProvider.getComments(this._film.id)
+    apiWithProvider.getComments(film.id)
       .then((comments) => {
         const oldFilmCardComponent = this._filmCardComponent;
         const oldPopupDetailFilmComponent = this._popupDetailFilmComponent;
@@ -134,7 +132,8 @@ export default class FilmController {
           apiWithProvider.removeComment(idComment)
             .then(() => {
               this._popupDetailFilmComponent.disabledButton(currentButton, currentList);
-              this.render(this._film);
+
+              this.render(this._film, comments);
             })
             .catch(() => {
               this._popupDetailFilmComponent.errorButton(currentButton, currentList);
@@ -142,42 +141,43 @@ export default class FilmController {
         });
 
         this._filmCardComponent.setAddToWatchlistClickHandler(() => {
-          const newFilm = FilmModel.clone(this._film);
+          const newFilm = FilmAdapter.clone(this._film);
           newFilm.userDetails.watchlist = !newFilm.userDetails.watchlist;
 
           this._onDataChange(this, film.id, newFilm);
         });
 
         this._filmCardComponent.setAddMarkAsWatchedHandler(() => {
-          const newFilm = FilmModel.clone(this._film);
+          const newFilm = FilmAdapter.clone(this._film);
           newFilm.userDetails.alreadyWatched = !newFilm.userDetails.alreadyWatched;
+          newFilm.userDetails.watchingDate = new Date().toISOString();
 
           this._onDataChange(this, film.id, newFilm);
         });
 
         this._filmCardComponent.setAddFavorite(() => {
-          const newFilm = FilmModel.clone(this._film);
+          const newFilm = FilmAdapter.clone(this._film);
           newFilm.userDetails.favorite = !newFilm.userDetails.favorite;
 
           this._onDataChange(this, film.id, newFilm);
         });
 
         this._popupDetailFilmComponent.setAddToWatchlistClickHandler(() => {
-          const newFilm = FilmModel.clone(this._film);
+          const newFilm = FilmAdapter.clone(this._film);
           newFilm.userDetails.watchlist = !newFilm.userDetails.watchlist;
 
           this._onDataChange(this, film.id, newFilm);
         });
 
         this._popupDetailFilmComponent.setAddMarkAsWatchedHandler(() => {
-          const newFilm = FilmModel.clone(this._film);
+          const newFilm = FilmAdapter.clone(this._film);
           newFilm.userDetails.alreadyWatched = !newFilm.userDetails.alreadyWatched;
 
           this._onDataChange(this, film.id, newFilm);
         });
 
         this._popupDetailFilmComponent.setAddFavoriteHandler(() => {
-          const newFilm = FilmModel.clone(this._film);
+          const newFilm = FilmAdapter.clone(this._film);
           newFilm.userDetails.favorite = !newFilm.userDetails.favorite;
 
           this._onDataChange(this, film.id, newFilm);
@@ -201,6 +201,14 @@ export default class FilmController {
     if (this._mode === Mode.OPEN) {
       this._closePopupFilm();
     }
+  }
+
+  disabledForm() {
+    this._popupDetailFilmComponent.disabledFormOffline();
+  }
+
+  activeForm() {
+    this._popupDetailFilmComponent.activeFormOnline();
   }
 
   _generateComment() {
