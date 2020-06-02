@@ -4,6 +4,8 @@ import {formatDateComment} from './../utils/common';
 import {encode} from 'he';
 
 const TEXTAREA_BORDER_RED = `1px #f00 solid`;
+const ANIMATION_NAME = `shake`;
+const EMOJI_PREFIX = `emoji-`;
 
 const ButtonDeleteText = {
   DEFAULT: `Delete`,
@@ -277,7 +279,7 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
 
   disabledForm() {
     const formFilm = this.getElement().querySelector(`.film-details__inner`);
-    formFilm.classList.remove(`shake`);
+    formFilm.classList.remove(ANIMATION_NAME);
     const textareaComment = this.getElement().querySelector(`.film-details__comment-input`);
     textareaComment.disabled = true;
     textareaComment.style.border = `none`;
@@ -286,20 +288,20 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
   errorForm() {
     const formFilm = this.getElement().querySelector(`.film-details__inner`);
     formFilm.disabled = true;
-    formFilm.classList.add(`shake`);
+    formFilm.classList.add(ANIMATION_NAME);
     formFilm.querySelector(`.film-details__comment-input`).style.border = TEXTAREA_BORDER_RED;
   }
 
   disabledButton(button, blockComment) {
     button.disabled = true;
     button.textContent = ButtonDeleteText.DELETING;
-    blockComment.classList.remove(`shake`);
+    blockComment.classList.remove(ANIMATION_NAME);
   }
 
   errorButton(button, blockComment) {
     button.disabled = false;
     button.textContent = ButtonDeleteText.DEFAULT;
-    blockComment.classList.add(`shake`);
+    blockComment.classList.add(ANIMATION_NAME);
   }
 
   setDeleteClickHandler(handler) {
@@ -308,8 +310,9 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
       const currentList = evt.currentTarget;
       const isDeleteButton = currentButton.classList.contains(`film-details__comment-delete`);
       if (isDeleteButton) {
+        const idFilm = Number(this.getElement().dataset.idFilm);
         const idComment = Number(evt.target.dataset.idComment);
-        handler(idComment, currentButton, currentList);
+        handler(idFilm, idComment, currentButton, currentList);
       }
 
       this._setDeleteClickHandler = handler;
@@ -367,7 +370,7 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
       const hideInputEmoji = this.getElement()
         .querySelector(`.film-details__emoji-item[name="comment-emoji"]`);
       if (evt.target.tagName === `INPUT`) {
-        this._currentEmoji = evt.target.id.replace(`emoji-`, ``);
+        this._currentEmoji = evt.target.id.replace(EMOJI_PREFIX, ``);
         hideInputEmoji.value = evt.target.value;
 
         this.rerender();
