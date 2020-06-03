@@ -48,7 +48,6 @@ export default class Sorts extends AbstractComponent {
 
   setSortButtonClickHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
-      console.log(evt.target);
       if (!evt.target.classList.contains(`sort__button--active`)) {
         this.removeActiveButton();
         evt.target.classList.add(`sort__button--active`);
