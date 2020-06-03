@@ -240,12 +240,16 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
   }
 
   resetCommentFilter() {
+    const formFilm = this.getElement().querySelector(`.film-details__inner`);
+    formFilm.classList.remove(ANIMATION_NAME);
+
     const commentsField = this.getElement()
       .querySelector(`.film-details__comment-input`);
     const emoji = this.getElement()
       .querySelector(`.film-details__add-emoji-label img`);
 
     commentsField.value = ``;
+    commentsField.style.border = `none`;
     if (emoji) {
       emoji.remove();
     }
