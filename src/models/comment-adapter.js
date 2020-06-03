@@ -1,10 +1,10 @@
 export default class CommentAdapter {
-  constructor(data) {
-    this.id = data[`id`];
-    this.author = data[`author`];
-    this.comment = data[`comment`];
-    this.date = data[`date`];
-    this.emotion = data[`emotion`];
+  constructor(comments) {
+    this.id = comments[`id`];
+    this.author = comments[`author`];
+    this.comment = comments[`comment`];
+    this.date = comments[`date`];
+    this.emotion = comments[`emotion`];
   }
 
   toRAW() {
@@ -27,9 +27,5 @@ export default class CommentAdapter {
 
   static parseCommentOfAdd(data) {
     return data.comments.map(CommentAdapter.parseComment);
-  }
-
-  static clone(comment) {
-    return new CommentAdapter(comment.toRAW());
   }
 }

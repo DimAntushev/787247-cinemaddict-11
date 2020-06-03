@@ -87,11 +87,11 @@ const getFilmsTopRated = (films, count) => {
     return Number(filmNext.filmInfo.totalRating) - Number(filmCurrent.filmInfo.totalRating);
   }).slice(0, count);
 
-  const isNoEmpty = filmsSort.findIndex((film) => {
+  const getEmptyStatusRating = filmsSort.findIndex((film) => {
     return film.filmInfo.totalRating !== 0;
   });
 
-  if (isNoEmpty !== -1) {
+  if (getEmptyStatusRating !== -1) {
     return filmsSort;
   }
 

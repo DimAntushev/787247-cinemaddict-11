@@ -4,7 +4,6 @@ import CommentAdapter from '../models/comment-adapter.js';
 const RESPONSE_STATUS_MIN = 200;
 const RESPONSE_STATUS_MAX = 300;
 
-
 const Methods = {
   GET: `GET`,
   POST: `POST`,

@@ -17,13 +17,13 @@ const getGenres = (genresFilms) => {
 };
 
 const getCountGenres = (genresFilms) => {
-  const genreCount = [];
+  const genresCount = [];
 
   genresFilms.forEach((genreFilm) => {
-    genreCount.push(genreFilm.countFilms);
+    genresCount.push(genreFilm.countFilms);
   });
 
-  return genreCount;
+  return genresCount;
 };
 
 const createStatsTemplate = (userInfo, activeFilter, filmsCount) => {

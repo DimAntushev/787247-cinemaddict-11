@@ -1,5 +1,9 @@
 import moment from 'moment';
 
+const MIN_FILMS_NOVICE_ACHIVE = 1;
+const MIN_FILMS_FAN_ACHIVE = 11;
+const MIN_FILMS_MOVE_BUFF_ACHIVE = 21;
+
 const Keys = {
   ESC: `Esc`,
   ESCAPE: `Escape`,
@@ -53,30 +57,18 @@ const formatDateFilmCardDetails = (date) => {
   return moment(date).format(`DD MMMM YYYY`);
 };
 
-const getRandomNumber = (min, max) => {
-  return Math.round(Math.random() * (max - min)) + min;
-};
-
-const getRandomNumberFloat = (min, max) => {
-  return Math.floor((Math.random() * (max - min)) * 10) / 10 + min;
-};
-
-const getRandomElementFromArray = (elements) => {
-  return elements[getRandomNumber(0, elements.length - 1)];
-};
-
 const getAchiveUser = (filmsCount) => {
   let achive = ``;
 
-  if (filmsCount >= 1) {
+  if (filmsCount >= MIN_FILMS_NOVICE_ACHIVE) {
     achive = `novice`;
   }
 
-  if (filmsCount >= 11) {
+  if (filmsCount >= MIN_FILMS_FAN_ACHIVE) {
     achive = `fan`;
   }
 
-  if (filmsCount >= 21) {
+  if (filmsCount >= MIN_FILMS_MOVE_BUFF_ACHIVE) {
     achive = `movie buff`;
   }
 
@@ -84,9 +76,6 @@ const getAchiveUser = (filmsCount) => {
 };
 
 export {
-  getRandomNumber,
-  getRandomNumberFloat,
-  getRandomElementFromArray,
   formatDateFilmCard,
   formatDateComment,
   formatRuntimeInMinutes,

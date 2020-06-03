@@ -27,19 +27,19 @@ const filterLocalComments = (idFilm, comments) => {
   });
 };
 
-const isOnline = () => {
+const getOnlineStatus = () => {
   return window.navigator.onLine;
 };
 
 export default class Provider {
-  constructor(api, storeFilms, storeComment) {
+  constructor(api, storeFilms, storeComments) {
     this._api = api;
     this._storeFilms = storeFilms;
-    this._storeComment = storeComment;
+    this._storeComments = storeComments;
   }
 
   getFilms() {
-    if (isOnline()) {
+    if (getOnlineStatus()) {
       return this._api.getFilms()
         .then((films) => {
           const filmsLocal = createStoreStructure(films.map((film) => film.toRAW()));
@@ -56,7 +56,7 @@ export default class Provider {
   }
 
   updateFilm(id, film) {
-    if (isOnline()) {
+    if (getOnlineStatus()) {
       return this._api.updateFilm(id, film)
         .then((newFilm) => {
           this._storeFilms.setItem(newFilm.id, newFilm.toRAW());
@@ -73,19 +73,19 @@ export default class Provider {
   }
 
   getComments(idFilm) {
-    if (isOnline()) {
+    if (getOnlineStatus()) {
       return this._api.getComments(idFilm)
         .then((comments) => {
 
           const localStoreComments = createStoreStructureComment(idFilm, comments);
 
-          this._storeComment.setItem(idFilm, localStoreComments);
+          this._storeComments.setItem(idFilm, localStoreComments);
 
           return comments;
         });
     }
 
-    const storeComments = Object.values(this._storeComment.getItems());
+    const storeComments = Object.values(this._storeComments.getItems());
 
     const localCommentsFilm = filterLocalComments(idFilm, storeComments);
 
@@ -93,7 +93,7 @@ export default class Provider {
   }
 
   removeComment(idFilm) {
-    if (isOnline()) {
+    if (getOnlineStatus()) {
       return this._api.removeComment(idFilm);
     }
 
@@ -101,7 +101,7 @@ export default class Provider {
   }
 
   addComment(idFilm, newComment) {
-    if (isOnline()) {
+    if (getOnlineStatus()) {
       return this._api.addComment(idFilm, newComment);
     }
 
@@ -109,7 +109,7 @@ export default class Provider {
   }
 
   sync() {
-    if (isOnline()) {
+    if (getOnlineStatus()) {
       const storeFilms = Object.values(this._storeFilms.getItems());
 
       return this._api.sync(storeFilms)
