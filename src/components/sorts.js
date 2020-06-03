@@ -34,9 +34,9 @@ export default class Sorts extends AbstractComponent {
   }
 
   reset() {
-    const allButtons = this.getElement().querySelectorAll(`.sort__button`);
-    allButtons.forEach((button) => button.classList.remove(`sort__button--active`));
-    allButtons[0].classList.add(`sort__button--active`);
+    const allButtonsElements = this.getElement().querySelectorAll(`.sort__button`);
+    allButtonsElements.forEach((buttonElement) => buttonElement.classList.remove(`sort__button--active`));
+    allButtonsElements[0].classList.add(`sort__button--active`);
   }
 
   removeActiveButton() {

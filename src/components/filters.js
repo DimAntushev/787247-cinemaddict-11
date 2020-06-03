@@ -52,9 +52,9 @@ export default class Filters extends AbstractSmartComponent {
   }
 
   reset() {
-    const allElementsMenu = this.getElement().querySelectorAll(`.main-navigation__item`);
+    const allMenuElements = this.getElement().querySelectorAll(`.main-navigation__item`);
     this.getElement().querySelector(`.main-navigation__item--active`).classList
       .remove(`main-navigation__item--active`);
-    allElementsMenu[0].classList.add(`main-navigation__item--active`);
+    allMenuElements[0].classList.add(`main-navigation__item--active`);
   }
 }

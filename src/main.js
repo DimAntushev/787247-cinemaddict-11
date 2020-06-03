@@ -20,6 +20,7 @@ const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 const STORE_FILMS_PREFIX = `cinemaddict-localstorage-films`;
 const STORE_FILMS_VER = `v1`;
 const STORE_FILMS_NAME = `${STORE_FILMS_PREFIX}-${STORE_FILMS_VER}`;
+const TITLE_TEXT_OFFLINE = ` [offline]`;
 
 const STORE_COMMENTS_PREFIX = `cinemaddict-localstorage-comments`;
 const STORE_COMMENTS_VER = `v1`;
@@ -33,8 +34,8 @@ const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
 const loadComponent = new LoadComponent();
 
-const mainHeader = document.querySelector(`.header`);
-const mainBlock = document.querySelector(`.main`);
+const mainHeaderElement = document.querySelector(`.header`);
+const mainBlockElement = document.querySelector(`.main`);
 
 const renderHeader = (mainHeaderBlock, filmsCount) => {
   render(mainHeaderBlock, new UserProfileComponent(filmsCount));
@@ -53,16 +54,16 @@ const loadComment = (idFilm) => {
     });
 };
 
-const pageController = new PageController(mainBlock, filmsModel, apiWithProvider);
-const filtersController = new FiltersController(mainBlock, filmsModel);
-const statsController = new StatsController(mainBlock, filmsModel);
+const pageController = new PageController(mainBlockElement, filmsModel, apiWithProvider);
+const filtersController = new FiltersController(mainBlockElement, filmsModel);
+const statsController = new StatsController(mainBlockElement, filmsModel);
 
 const init = () => {
-  render(mainBlock, loadComponent, RenderPosition.AFTERBEGIN);
+  render(mainBlockElement, loadComponent, RenderPosition.AFTERBEGIN);
   apiWithProvider.getFilms()
     .then((films) => {
       const filmsCount = films.filter((filmFilter) => filmFilter.userDetails.alreadyWatched).length;
-      renderHeader(mainHeader, filmsCount);
+      renderHeader(mainHeaderElement, filmsCount);
       remove(loadComponent);
       filmsModel.setFilms(films);
       return films.map((film) => {
@@ -79,8 +80,8 @@ const init = () => {
       pageController.render();
       pageController.hide();
       statsController.render(films, filmsModel);
-      const footerStatistics = document.querySelector(`.footer__statistics`);
-      renderFooter(films.length, footerStatistics);
+      const footerStatisticsElement = document.querySelector(`.footer__statistics`);
+      renderFooter(films.length, footerStatisticsElement);
     });
 };
 
@@ -96,14 +97,14 @@ window.addEventListener(`load`, () => {
 });
 
 window.addEventListener(`online`, () => {
-  document.title = document.title.replace(` [offline]`, ``);
+  document.title = document.title.replace(TITLE_TEXT_OFFLINE, ``);
   pageController.activeFormsFilms();
 
   apiWithProvider.sync();
 });
 
 window.addEventListener(`offline`, () => {
-  document.title += ` [offline]`;
+  document.title += TITLE_TEXT_OFFLINE;
   pageController.disableFormsFilms();
 });
 

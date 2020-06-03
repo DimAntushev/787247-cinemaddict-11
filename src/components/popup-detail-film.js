@@ -240,72 +240,72 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
   }
 
   resetCommentFilter() {
-    const formFilm = this.getElement().querySelector(`.film-details__inner`);
-    formFilm.classList.remove(ANIMATION_NAME);
+    const formFilmElement = this.getElement().querySelector(`.film-details__inner`);
+    formFilmElement.classList.remove(ANIMATION_NAME);
 
-    const commentsField = this.getElement()
+    const commentsFieldElement = this.getElement()
       .querySelector(`.film-details__comment-input`);
-    const emoji = this.getElement()
+    const emojiElement = this.getElement()
       .querySelector(`.film-details__add-emoji-label img`);
 
-    commentsField.value = ``;
-    commentsField.style.border = `none`;
-    if (emoji) {
-      emoji.remove();
+    commentsFieldElement.value = ``;
+    commentsFieldElement.style.border = `none`;
+    if (emojiElement) {
+      emojiElement.remove();
     }
   }
 
   activeFormOnline() {
-    const deleteButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
-    deleteButtons.forEach((button) => {
+    const deleteButtonsElements = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+    deleteButtonsElements.forEach((button) => {
       button.classList.remove(`visually-hidden`);
     });
 
-    const textareaComment = this.getElement().querySelector(`.film-details__comment-input`);
-    textareaComment.disabled = false;
+    const textareaCommentElement = this.getElement().querySelector(`.film-details__comment-input`);
+    textareaCommentElement.disabled = false;
 
-    const emojiList = this.getElement().querySelector(`.film-details__emoji-list`);
-    emojiList.classList.remove(`visually-hidden`);
+    const emojiListElement = this.getElement().querySelector(`.film-details__emoji-list`);
+    emojiListElement.classList.remove(`visually-hidden`);
   }
 
   disabledFormOffline() {
-    const deleteButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
-    deleteButtons.forEach((button) => {
+    const deleteButtonsElement = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+    deleteButtonsElement.forEach((button) => {
       button.classList.add(`visually-hidden`);
     });
 
-    const textareaComment = this.getElement().querySelector(`.film-details__comment-input`);
-    textareaComment.disabled = true;
+    const textareaCommentElement = this.getElement().querySelector(`.film-details__comment-input`);
+    textareaCommentElement.disabled = true;
 
-    const emojiList = this.getElement().querySelector(`.film-details__emoji-list`);
-    emojiList.classList.add(`visually-hidden`);
+    const emojiListElement = this.getElement().querySelector(`.film-details__emoji-list`);
+    emojiListElement.classList.add(`visually-hidden`);
   }
 
   disabledForm() {
-    const formFilm = this.getElement().querySelector(`.film-details__inner`);
-    formFilm.classList.remove(ANIMATION_NAME);
-    const textareaComment = this.getElement().querySelector(`.film-details__comment-input`);
-    textareaComment.disabled = true;
-    textareaComment.style.border = `none`;
+    const formFilmElement = this.getElement().querySelector(`.film-details__inner`);
+    formFilmElement.classList.remove(ANIMATION_NAME);
+    const textareaCommentElement = this.getElement().querySelector(`.film-details__comment-input`);
+    textareaCommentElement.disabled = true;
+    textareaCommentElement.style.border = `none`;
   }
 
   errorForm() {
-    const formFilm = this.getElement().querySelector(`.film-details__inner`);
-    formFilm.disabled = true;
-    formFilm.classList.add(ANIMATION_NAME);
-    formFilm.querySelector(`.film-details__comment-input`).style.border = TEXTAREA_BORDER_RED;
+    const formFilmElement = this.getElement().querySelector(`.film-details__inner`);
+    formFilmElement.disabled = true;
+    formFilmElement.classList.add(ANIMATION_NAME);
+    formFilmElement.querySelector(`.film-details__comment-input`).style.border = TEXTAREA_BORDER_RED;
   }
 
-  disabledButton(button, blockComment) {
-    button.disabled = true;
-    button.textContent = ButtonDeleteText.DELETING;
-    blockComment.classList.remove(ANIMATION_NAME);
+  disabledButton(buttonElement, blockCommentElement) {
+    buttonElement.disabled = true;
+    buttonElement.textContent = ButtonDeleteText.DELETING;
+    blockCommentElement.classList.remove(ANIMATION_NAME);
   }
 
-  errorButton(button, blockComment) {
-    button.disabled = false;
-    button.textContent = ButtonDeleteText.DEFAULT;
-    blockComment.classList.add(ANIMATION_NAME);
+  errorButton(buttonElement, blockCommentElement) {
+    buttonElement.disabled = false;
+    buttonElement.textContent = ButtonDeleteText.DEFAULT;
+    blockCommentElement.classList.add(ANIMATION_NAME);
   }
 
   getCurrentEmoji() {
@@ -318,13 +318,13 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
 
   setDeleteClickHandler(handler) {
     this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, (evt) => {
-      const currentButton = evt.target;
-      const currentList = evt.currentTarget;
-      const isDeleteButton = currentButton.classList.contains(`film-details__comment-delete`);
+      const currentButtonElement = evt.target;
+      const currentListElement = evt.currentTarget;
+      const isDeleteButton = currentButtonElement.classList.contains(`film-details__comment-delete`);
       if (isDeleteButton) {
         const idFilm = Number(this.getElement().dataset.idFilm);
-        const idComment = Number(evt.target.dataset.idComment);
-        handler(idFilm, idComment, currentButton, currentList);
+        const idComment = Number(currentButtonElement.dataset.idComment);
+        handler(idFilm, idComment, currentButtonElement, currentListElement);
       }
 
       this._setDeleteClickHandler = handler;
@@ -379,11 +379,11 @@ export default class PopupDetailFilm extends AbstractSmartComponent {
     const element = this.getElement();
 
     element.querySelector(`.film-details__emoji-list`).addEventListener(`click`, (evt) => {
-      const hideInputEmoji = this.getElement()
+      const hideInputEmojiElement = this.getElement()
         .querySelector(`.film-details__emoji-item[name="comment-emoji"]`);
       if (evt.target.tagName === `INPUT`) {
         this._currentEmoji = evt.target.id.replace(EMOJI_PREFIX, ``);
-        hideInputEmoji.value = evt.target.value;
+        hideInputEmojiElement.value = evt.target.value;
 
         this.rerender();
       }

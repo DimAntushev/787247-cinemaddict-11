@@ -15,7 +15,7 @@ const Mode = {
   CLOSE: `close`
 };
 
-const mainFooter = document.querySelector(`.footer`);
+const mainFooterElement = document.querySelector(`.footer`);
 
 const getComment = (idFilm, comments) => {
   return comments.find((comment) => {
@@ -160,7 +160,7 @@ export default class FilmController {
   _showPopupFilm() {
     this._onViewChange();
     this._mode = Mode.OPEN;
-    render(mainFooter, this._popupDetailFilmComponent, RenderPosition.AFTEREND);
+    render(mainFooterElement, this._popupDetailFilmComponent, RenderPosition.AFTEREND);
   }
 
   _closePopupFilm() {
