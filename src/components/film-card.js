@@ -3,8 +3,8 @@ import AbstractComponent from './abstract-component.js';
 
 const MAX_LENGTH_DESCRIPTION = 140;
 
-const createFilmCardTemplate = (film) => {
-  const {filmInfo, userDetails, comments} = film;
+const createFilmCardTemplate = (film, comments) => {
+  const {filmInfo, userDetails} = film;
 
   const releaseDate = formatDateFilmCard(filmInfo.release.date);
   const runtime = formatRuntimeInMinutes(filmInfo.runtime);

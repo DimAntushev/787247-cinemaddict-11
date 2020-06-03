@@ -15,7 +15,7 @@ import Store from './api/store.js';
 import Provider from './api/provider.js';
 import {RenderPosition} from "./utils/render";
 
-const AUTHORIZATION_TOKEN = `Basic sdvserverver=`;
+const AUTHORIZATION_TOKEN = `Basic uivevinreow=`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 const STORE_FILMS_PREFIX = `cinemaddict-localstorage-films`;
 const STORE_FILMS_VER = `v1`;

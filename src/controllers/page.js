@@ -166,25 +166,26 @@ export default class Page {
       return;
     }
 
-    const filmRatedCards = getFilmsTopRated(this._films, FILMS_TOP_RATED);
-    const filmMostCommentedCards = getFilmsMostCommented(this._films, FILMS_MOST_COMMENTED);
-
     renderAllFilmsBlock(this._filmsBlockComponent, this._filmsAllComponent);
     this._showingFilmControllers = renderMainFilmCards(this._films, this._filmListMain, this._startShowCardsLoad,
         this._onDataChange, this._onViewChange);
 
-    if (filmRatedCards) {
-      renderTopFilmsBlock(this._filmsBlockComponent, this._filmsTopComponent);
-      renderTopFilmCards(filmRatedCards, this._filmListTop, this._onDataChange, this._onViewChange);
-    }
+    this.renderTopCommentedFilms(this._films);
+
+    this._renderRatedFilms();
+
+    this._startShowCardsLoad += FILMS_NUMBER_COUNT;
+  }
+
+  renderTopCommentedFilms(films) {
+    const filmMostCommentedCards = getFilmsMostCommented(films, FILMS_MOST_COMMENTED);
+    this._filmsMostCommentComponent.removeFilmsCards();
     if (filmMostCommentedCards) {
       renderMostCommentFilmsBlock(this._filmsBlockComponent, this._filmsMostCommentComponent);
       renderMostCommentListCards(filmMostCommentedCards, this._filmListMostComment, this._onDataChange,
           this._onViewChange);
       this._buttonShowMore();
     }
-
-    this._startShowCardsLoad += FILMS_NUMBER_COUNT;
   }
 
   show() {
@@ -207,6 +208,15 @@ export default class Page {
     this._showingFilmControllers.forEach((filmController) => {
       filmController.activeForm();
     });
+  }
+
+  _renderRatedFilms() {
+    const filmRatedCards = getFilmsTopRated(this._films, FILMS_TOP_RATED);
+
+    if (filmRatedCards) {
+      renderTopFilmsBlock(this._filmsBlockComponent, this._filmsTopComponent);
+      renderTopFilmCards(filmRatedCards, this._filmListTop, this._onDataChange, this._onViewChange);
+    }
   }
 
   _buttonShowMore() {
