@@ -29,7 +29,7 @@ export default class Comments {
   }
 
   removeComment(idFilm, idComment) {
-    let currentComment = this._comments.find((comment) => Number(comment.idFilmComments) === Number(idFilm));
+    const currentComment = this._comments.find((comment) => Number(comment.idFilmComments) === Number(idFilm));
     const index = this._comments.findIndex((comment) => Number(comment.idFilmComments) === Number(idFilm));
     const indexDelete = currentComment.comments.findIndex((comment) => Number(comment.id) === (idComment));
 
