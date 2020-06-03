@@ -86,8 +86,8 @@ const createStatsTemplate = (userInfo, activeFilter, filmsCount) => {
 const renderStats = (genresFilms) => {
   const BAR_HEIGHT = 50;
   const statisticCtx = document.querySelector(`.statistic__chart`).getContext(`2d`);
-  const countGenres = genresFilms.length;
-  statisticCtx.height = BAR_HEIGHT * countGenres;
+  const genresCount = genresFilms.length;
+  statisticCtx.height = BAR_HEIGHT * genresCount;
 
   return new Chart(statisticCtx, {
     plugins: [ChartDataLabels],

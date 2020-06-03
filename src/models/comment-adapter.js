@@ -25,7 +25,7 @@ export default class CommentAdapter {
     return comments.map(CommentAdapter.parseComment);
   }
 
-  static parseCommentOfAdd(data) {
-    return data.comments.map(CommentAdapter.parseComment);
+  static parseCommentOfAdd(comments) {
+    return comments.comments.map(CommentAdapter.parseComment);
   }
 }
