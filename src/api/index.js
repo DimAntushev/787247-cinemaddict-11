@@ -79,7 +79,6 @@ export default class API {
       .then((response) => response.json());
   }
 
-
   _load({url, method = Methods.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 

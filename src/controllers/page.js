@@ -11,8 +11,8 @@ import SortsComponent from '../components/sorts';
 
 import FilmController from './film.js';
 
-import {sorts} from './../mocks/sorts.js';
-import {SortType} from './../mocks/sorts.js';
+import {sorts} from './../utils/sorts.js';
+import {SortType} from './../utils/sorts.js';
 
 const FILMS_NUMBER_COUNT = 5;
 const FILMS_TOP_RATED = 2;
@@ -137,10 +137,9 @@ export default class Page {
     this._filmsMostCommentComponent = new FilmsMostCommentComponent();
     this._buttonShowMoreComponent = new MoreButtonFilmsComponent();
 
-    this._filmListMain = this._filmsAllComponent.getElement().querySelector(`.films-list__container`);
-    this._filmListTop = this._filmsTopComponent.getElement().querySelector(`.films-list__container`);
-    this._filmListMostComment = this._filmsMostCommentComponent.getElement()
-      .querySelector(`.films-list__container`);
+    this._filmListMain = this._filmsAllComponent.getContainer();
+    this._filmListTop = this._filmsTopComponent.getContainer();
+    this._filmListMostComment = this._filmsMostCommentComponent.getContainer();
   }
 
   render() {
@@ -150,18 +149,14 @@ export default class Page {
     render(this._container, this._sortsComponent);
 
     this._sortsComponent.setSortButtonClickHandler((evt) => {
-      if (!evt.target.classList.contains(`sort__button--active`)) {
-        const sortName = evt.target.dataset.sortName;
-        this._films = sortingFilms(this._films, this._filmsDefault, sortName);
-        this._sortsComponent.removeActiveButton();
-        evt.target.classList.add(`sort__button--active`);
-        this._removeFilms();
-        this._startShowCardsLoad = 0;
-        this._showingFilmControllers = renderMainFilmCards(this._films, this._filmListMain, this._startShowCardsLoad,
-            this._onDataChange, this._onViewChange);
-        this._startShowCardsLoad += FILMS_NUMBER_COUNT;
-        this._buttonShowMore();
-      }
+      const sortName = evt.target.dataset.sortName;
+      this._films = sortingFilms(this._films, this._filmsDefault, sortName);
+      this._removeFilms();
+      this._startShowCardsLoad = 0;
+      this._showingFilmControllers = renderMainFilmCards(this._films, this._filmListMain, this._startShowCardsLoad,
+          this._onDataChange, this._onViewChange);
+      this._startShowCardsLoad += FILMS_NUMBER_COUNT;
+      this._buttonShowMore();
     });
 
     renderMainBlockForFilms(this._container, this._filmsBlockComponent);
@@ -170,25 +165,26 @@ export default class Page {
       return;
     }
 
-    const filmRatedCards = getFilmsTopRated(this._films, FILMS_TOP_RATED);
-    const filmMostCommentedCards = getFilmsMostCommented(this._films, FILMS_MOST_COMMENTED);
-
     renderAllFilmsBlock(this._filmsBlockComponent, this._filmsAllComponent);
     this._showingFilmControllers = renderMainFilmCards(this._films, this._filmListMain, this._startShowCardsLoad,
         this._onDataChange, this._onViewChange);
 
-    if (filmRatedCards) {
-      renderTopFilmsBlock(this._filmsBlockComponent, this._filmsTopComponent);
-      renderTopFilmCards(filmRatedCards, this._filmListTop, this._onDataChange, this._onViewChange);
-    }
+    this.renderTopCommentedFilms(this._films);
+
+    this._renderRatedFilms();
+
+    this._startShowCardsLoad += FILMS_NUMBER_COUNT;
+  }
+
+  renderTopCommentedFilms(films) {
+    const filmMostCommentedCards = getFilmsMostCommented(films, FILMS_MOST_COMMENTED);
+    this._filmsMostCommentComponent.removeFilmsCards();
     if (filmMostCommentedCards) {
       renderMostCommentFilmsBlock(this._filmsBlockComponent, this._filmsMostCommentComponent);
       renderMostCommentListCards(filmMostCommentedCards, this._filmListMostComment, this._onDataChange,
           this._onViewChange);
       this._buttonShowMore();
     }
-
-    this._startShowCardsLoad += FILMS_NUMBER_COUNT;
   }
 
   show() {
@@ -211,6 +207,15 @@ export default class Page {
     this._showingFilmControllers.forEach((filmController) => {
       filmController.activeForm();
     });
+  }
+
+  _renderRatedFilms() {
+    const filmRatedCards = getFilmsTopRated(this._films, FILMS_TOP_RATED);
+
+    if (filmRatedCards) {
+      renderTopFilmsBlock(this._filmsBlockComponent, this._filmsTopComponent);
+      renderTopFilmCards(filmRatedCards, this._filmListTop, this._onDataChange, this._onViewChange);
+    }
   }
 
   _buttonShowMore() {
@@ -290,3 +295,4 @@ export default class Page {
     this._buttonShowMore();
   }
 }
+

@@ -1,7 +1,8 @@
-import {render} from './utils/render.js';
+import {render, remove} from './utils/render.js';
 
 import UserProfileComponent from './components/user-profile.js';
 import TotalNumbersFilmsComponent from './components/total-number-films.js';
+import LoadComponent from './components/loading.js';
 
 import FilmsModel from './models/films.js';
 import CommentsModel from './models/comments.js';
@@ -12,8 +13,9 @@ import StatsController from './controllers/stats.js';
 import API from './api/index.js';
 import Store from './api/store.js';
 import Provider from './api/provider.js';
+import {RenderPosition} from "./utils/render";
 
-const AUTHORIZATION_TOKEN = `Basic sdvserverver=`;
+const AUTHORIZATION_TOKEN = `Basic uivevinreow=`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 const STORE_FILMS_PREFIX = `cinemaddict-localstorage-films`;
 const STORE_FILMS_VER = `v1`;
@@ -29,6 +31,7 @@ const storeComments = new Store(STORE_COMMENTS_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, storeFilms, storeComments);
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
+const loadComponent = new LoadComponent();
 
 const mainHeader = document.querySelector(`.header`);
 const mainBlock = document.querySelector(`.main`);
@@ -40,17 +43,39 @@ const renderFooter = (totalFilms, footerStatistics) => {
   render(footerStatistics, new TotalNumbersFilmsComponent(totalFilms));
 };
 
+const loadComment = (idFilm) => {
+  return apiWithProvider.getComments(idFilm)
+    .then((comments) => {
+      return {
+        comments,
+        idFilmComments: idFilm
+      };
+    });
+};
+
 const pageController = new PageController(mainBlock, filmsModel, apiWithProvider);
 const filtersController = new FiltersController(mainBlock, filmsModel);
 const statsController = new StatsController(mainBlock, filmsModel);
 
 const init = () => {
+  render(mainBlock, loadComponent, RenderPosition.AFTERBEGIN);
   apiWithProvider.getFilms()
     .then((films) => {
-      const filmsCount = films.filter((film) => film.userDetails.alreadyWatched).length;
+      const filmsCount = films.filter((filmFilter) => filmFilter.userDetails.alreadyWatched).length;
       renderHeader(mainHeader, filmsCount);
-      filtersController.render();
+      remove(loadComponent);
       filmsModel.setFilms(films);
+      return films.map((film) => {
+        return loadComment(film.id);
+      });
+    })
+    .then((commentsPromises) => {
+      return Promise.all(commentsPromises);
+    })
+    .then((comments) => {
+      commentsModel.setComments(comments);
+      const films = filmsModel.getFilmsAll();
+      filtersController.render();
       pageController.render();
       pageController.hide();
       statsController.render(films, filmsModel);

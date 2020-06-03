@@ -14,4 +14,8 @@ export default class FilmsTop extends AbstractComponent {
   getTemplate() {
     return createFilmsTopTemplate();
   }
+
+  getContainer() {
+    return this.getElement().querySelector(`.films-list__container`);
+  }
 }

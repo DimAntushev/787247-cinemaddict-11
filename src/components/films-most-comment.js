@@ -14,4 +14,12 @@ export default class FilmsMostComment extends AbstractComponent {
   getTemplate() {
     return createFilmsMostCommentTemplate();
   }
+
+  getContainer() {
+    return this.getElement().querySelector(`.films-list__container`);
+  }
+
+  removeFilmsCards() {
+    this.getElement().querySelector(`.films-list__container`).innerHTML = ``;
+  }
 }
