@@ -8,7 +8,7 @@ const createFilmCardTemplate = (film, comments) => {
 
   const releaseDate = formatDateFilmCard(filmInfo.release.date);
   const runtime = formatRuntimeInMinutes(filmInfo.runtime);
-  const description = filmInfo.description.length > 140 ?
+  const description = filmInfo.description.length > MAX_LENGTH_DESCRIPTION ?
     filmInfo.description.slice(0, MAX_LENGTH_DESCRIPTION) + `...` : filmInfo.description;
 
   return (
